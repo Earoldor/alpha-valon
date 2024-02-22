@@ -50,6 +50,7 @@
 <script src="js/jquery.js"></script>
 <script src="js/avalam.js"></script>
 
+
 <script>
 
 // version 1/02/2022 
@@ -63,8 +64,8 @@
 var position = [];
 
 
-var filename="../exemples/refresh-data.js"; // les chemins des fichiers sont fournis relativement au répertoire data
-var refreshtime=1;
+var filename="refresh-data.json"; // les chemins des fichiers sont fournis relativement au répertoire data
+var refreshtime=0.5;
 var couleurs = ["aucun","jaune","rouge"];
 var colrefs = []; 
 var evolution = {bonusJ:false, malusJ:false, bonusR:false, malusR:false}; 
@@ -189,7 +190,7 @@ function refresh() {
 
 function getJson() {
 	var scriptElement = document.createElement('script');
-	scriptElement.src = "data/" + filename + '?cle=' + Math.random();
+	scriptElement.src = "" + filename + '?cle=' + Math.random();
 	document.body.appendChild(scriptElement);
 }
 

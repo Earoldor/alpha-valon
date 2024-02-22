@@ -4,7 +4,7 @@ all: install
 debug: DEBUG=-D'__DEBUG__'
 debug: install
 
-INC=-I../include
+INC=-I../include/
 
 install: libavalam.so libavalam.a
 	mkdir -p ../build/lib

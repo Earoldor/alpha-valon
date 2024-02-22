@@ -11,11 +11,11 @@ install: standalone.static standalone.exe
 	cp standalone.exe ../build/
 	cp standalone.static ../build/
 
-LIB=-L../build/lib
+LIB=-L../build/
 INC=-I../include
 
 standalone.exe:standalone.c 
-	gcc $(DEBUG) $(LIB) $(INC) standalone.c -o standalone.exe -lavalam
+	gcc $(DEBUG) $(LIB) -lavalam $(INC) standalone.c -o standalone.exe 
 
 standalone.static:standalone.c 
 	gcc -static $(DEBUG) $(INC) $(LIB)  standalone.c -o standalone.static  -lavalam
