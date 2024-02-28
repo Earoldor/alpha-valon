@@ -27,6 +27,7 @@
 /***********************************************************/
 
 void writeJS(T_Position position, T_Score score, char chaine_JS[]); //prototype of the function that will write the JSON file
+void fonctionFen(T_Position pos);                              //prototype of the function that will write the FEN format
 
 /***********************************************************/
 /*Principal function : main                               */
@@ -60,11 +61,12 @@ int main()
     printf0("_DEBUG_ EVALUATION DU SCORE\n");
     score = evaluerScore(position);      //move evaluation
 
-    writeJS(position, score, "./web/refresh-data.json");    //writting of the JSON file of the initial position
+    writeJS(position, score, "../web/refresh-data.json");    //writting of the JSON file of the initial position
 
     printf("\t!--!--!--!--!--!--!--!--! LA PARTIE COMMENCE !--!--!--!--!--!--!--!--!\n\n");
 
     printf("\tC'est au tour du joueur %d de jouer.\n", position.trait);    //showing the player who has to play
+    fonctionFen(position);                                               //writting of the FEN format of the position
 
     /*******************************************************/
     /*Placement of bonus and malus                         */
@@ -72,14 +74,14 @@ int main()
 
 
     printf("\n\tAu tour du joueur 1 de donner la position de son bonus :");
-    scanf("%hhd", &position.evolution.bonusJ);            //entering the position of the bonus of the player 1
+    scanf("%hhd", &(position.evolution.bonusJ));            //entering the position of the bonus of the player 1
 
     while(position.cols[position.evolution.bonusJ].couleur==ROU)
     {
         printf("\n\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre case:");
         scanf("%hhd", &position.evolution.bonusJ);
     }
-    writeJS(position, score, "./web/refresh-data.json");
+    writeJS(position, score, "../web/refresh-data.json");
    
     printf("\n\tAu tour du joueur 1 de donner la position de son malus :");
     scanf("%hhd", &position.evolution.malusJ);            //entering the position of the malus of the player 1
@@ -89,7 +91,7 @@ int main()
         printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
         scanf("%hhd", &position.evolution.malusJ);
     }
-    writeJS(position, score, "./web/refresh-data.json");
+    writeJS(position, score, "../web/refresh-data.json");
 
     printf("\n\tAu tour du joueur 2 de donner la position de son bonus :");
     scanf("%hhd", &position.evolution.bonusR);            //entering the position of the bonus of the player 2
@@ -99,7 +101,7 @@ int main()
         printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
         scanf("%hhd", &position.evolution.bonusR);
     }
-    writeJS(position, score, "./web/refresh-data.json");
+    writeJS(position, score, "../web/refresh-data.json");
 
     printf("\n\tAu tour du joueur 2 de donner la position de son malus :");
     scanf("%hhd", &position.evolution.malusR);            //entering the position of the malus of the player 2
@@ -110,7 +112,9 @@ int main()
         scanf("%hhd", &position.evolution.malusR);
     }
 
-    writeJS(position, score, "./web/refresh-data.json");    //writting finals results of placing bonus and malus
+    writeJS(position, score, "../web/refresh-data.json");    //writting finals results of placing bonus and malus
+    fonctionFen(position);                                   //writting of the FEN format of the position
+  
 
     /*******************************************************/
     /*Progress of the game                                 */
@@ -166,13 +170,14 @@ int main()
             position = jouerCoup(position, coup.origine, coup.destination);     //play the move
             score = evaluerScore(position);                                     //evaluate the score
             printf("\n\t!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!\n\n");
+            fonctionFen(position);
         }
         else                                                                    //if the move is not valid
         {
             printf("\n\t!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!\n\n");
         }
 
-        writeJS(position, score, "./web/refresh-data.json");    //writting of the JSON file of the position after the move
+        writeJS(position, score, "../web/refresh-data.json");    //writting of the JSON file of the position after the move
         legaux=getCoupsLegaux(position);                                         //update of the legal moves
     }
 
@@ -218,6 +223,12 @@ void writeJS(T_Position position, T_Score score, char chaine_JS[])
     FILE *fic ;
     fic = fopen(chaine_JS, "w");
 
+    if(fic == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier");
+        exit(1);
+    }
+
 
     fprintf(fic,"traiterJson({\n");
     fprintf(fic, "%s:%d,\n", STR_TURN, position.trait);             //showing the player who has to play
@@ -242,3 +253,124 @@ void writeJS(T_Position position, T_Score score, char chaine_JS[])
     fclose(fic);
 }
 
+void fonctionFen(T_Position pos)
+{
+    char chaine[100];
+    int i,j=0,stock=0;
+    char nbvide[10];
+
+    for(i=0;i< NBCASES;i++)
+    {
+        if(pos.cols[i].nb==0)
+        {
+            stock++;
+            while(i + 1 < NBCASES && pos.cols[i + 1].nb == 0)
+            {
+            stock++;
+            i++;
+            }
+
+            snprintf(nbvide, sizeof(nbvide), "%d", stock);
+            strcat(chaine, nbvide);
+            j += strlen(nbvide);
+            stock = 0;         
+        }
+
+        switch(pos.cols[i].nb)
+        {
+            case 1:
+                if(pos.cols[i].couleur==JAU)
+                {
+                    chaine[j]='u';
+                    j++;
+                }
+                else
+                {
+                    chaine[j]='U';
+                    j++;
+                }
+                break;
+            case 2:
+                if(pos.cols[i].couleur==JAU)
+                {
+                    chaine[j]='d';
+                    j++;
+                }
+                else
+                {
+                    chaine[j]='D';
+                    j++;
+                }
+                break;
+            case 3:
+                if(pos.cols[i].couleur==JAU)
+                {
+                    chaine[j]='t';
+                    j++;
+                }
+                else
+                {
+                    chaine[j]='T';
+                    j++;
+                }
+                break;
+            case 4:
+                if(pos.cols[i].couleur==JAU)
+                {
+                    chaine[j]='q';
+                    j++;
+                }
+                else
+                {
+                    chaine[j]='Q';
+                    j++;
+                }
+                break;
+            case 5:
+                if(pos.cols[i].couleur==JAU)
+                {
+                    chaine[j]='c';
+                    j++;
+                }
+                else
+                {
+                    chaine[j]='C';
+                    j++;
+                }
+                break;
+        }
+        if(i==pos.evolution.bonusJ)
+        {
+            chaine[j] = 'b';
+            j++;
+        }
+        if(i==pos.evolution.malusJ)
+        {
+            chaine[j] = 'm';
+            j++;
+        }
+        if(i==pos.evolution.bonusR)
+        {
+            chaine[j] = 'B';
+            j++;
+        }
+        if(i==pos.evolution.malusR)
+        {
+            chaine[j] = 'M';
+            j++;
+        }
+    }
+
+    chaine[j]=' ';
+    if(pos.trait==JAU)
+    {
+        chaine[j+1]='j';
+    }
+    else
+    {
+        chaine[j+1]='r';
+    }
+    chaine[j+2]='\0';
+
+    printf("%s\n",chaine);
+}

@@ -28,185 +28,69 @@
 /*Déclaration des prototypes                               */
 /***********************************************************/
 
-void writeJS(T_Position position, T_Score score, char chaine_JS[]); //prototype de la fonction d'écriture du fichier JSON
+void writeJS(T_Position position, T_Score score, char chaine_JS[], char desc[], int numDiag); //prototype de la fonction d'écriture du fichier JSON
 void fonctionFen(T_Position position);                              //prototype de la fonction d'écriture du format FEN
-T_Position interpreterFen(char* argv[]);                                //prototype de la fonction d'interprétation du format FEN
-
+T_Position interpreterFen(char* chaineFEN);                                //prototype de la fonction d'interprétation du format FEN
+T_Position lireFEN(char *chaineFEN);
 /***********************************************************/
 /*Fonction principale : main                               */
 /***********************************************************/
 
 int main(int argc, char* argv[])
 {
-    /*******************************************************/
-    /*Déclaration des variables                            */
-    /*******************************************************/
-
-    T_Position position;    //déclaration de la position
-    T_Score score;          //déclaration du score
-    T_Coup coup;            //déclaration du coup
-    T_ListeCoups legaux;    //déclaration des coups légaux (critère d'arret potentiel)
-    octet stockage;         //déclaration d'un octet qui servira de stockage quelconque
-    int reponse;
-
-
-    /*******************************************************/
-    /*Initialisation et démarrage de la partie             */
-    /*******************************************************/
-
-
-
-    printf("\t!--!--!--!--!--!--!--!--! JOUONS À AVALAM !--!--!--!--!--!--!--!--!\n\n");
-
-    position = getPositionInitiale();    //initialisation de la position
-    legaux = getCoupsLegaux(position);   //initialisation des coups légaux
-    score = evaluerScore(position);      //initialisation du score
-
-    printf("Voulez-vous charger une partie ? (1 pour oui, 0 pour non) : ");
-    scanf("%d", &reponse);
-
-    if(reponse != 1)
-    {
+    char *chaineF=argv[2]; //chaineFEN est la chaine de caractère qui contient la FEN
+    char desc[MAXCHAR];             //desc est la chaine de caractère qui contient la description du fichier
+    int rep,c;
+    char chemin[MAXNOM];
+    T_Position position;
+    T_Score score=evaluerScore(position);
     
 
-    writeJS(position, score, "./web/refresh-data.json");    //écriture du fichier JSON de la position initiale
-    fonctionFen(position);                                  //écriture du format FEN de la position initiale
 
-    printf("\t!--!--!--!--!--!--!--!--! LA PARTIE COMMENCE !--!--!--!--!--!--!--!--!\n\n");
+    if(argc != 3)   //Condition d'erreur pour le nombre d'arguments passé en ligne de commandes
+    {
+        fprintf(stderr, "!--!--!--!--!--! ERREUR CRITIQUE : NOMBRE D'ARGUMENTS TROP IMPORTANT. SYNTAXE AUTORISÉE: EXE NUMDIAG FEN !--!--!--!--!--!\n");
+        exit(EXIT_FAILURE);
+    }
 
-    printf("\tC'est au tour du joueur %d de jouer.\n", position.trait);    //affichage du joueur qui doit jouer au départ
+    printf("!--!--!--!--!--! VEUILLEZ ENTREZ UNE DESCRIPTION POUR LE DIAGRAMME !--!--!--!--!--!\n");
+    fgets(desc, MAXCHAR, stdin); //on demande à l'utilisateur de rentrers la description du fichier
+    strtok(desc, "\n"); //on supprime le retour à la ligne du au fgets
     
+    if(desc==NULL)
+        printf("!--!--!--!--!--! DESCRIPTION NON RENSEIGNÉE !--!--!--!--!--!\n");
 
-    /*******************************************************/
-    /*Placement des bonus et des malus                     */
-    /*******************************************************/
+    printf("!--!--!--!--!--! CARACTÉRISTIQUES DU FICHIER !--!--!--!--!--!\n");
+    printf("!--! DIAGRAMME NUMÉRO : %s !--!\n", argv[1]);
+    printf("!--! CHAINE FEN : %s !--!\n",chaineF);
+    printf("!--! DESCRIPTION : %s !--!\n",desc);
+    printf("!--!--!--!--!--! FIN DES CARACTÉRISTIQUES !--!--!--!--!--!--!\n");
 
+    position = lireFEN(chaineF); //on interprète la chaine FEN
 
-    printf("\n\tAu tour du joueur 1 de donner la position de son bonus :");
-    scanf("%hhd", &position.evolution.bonusJ);            //saisie de la position du bonus du joueur 1
-
-    while(position.cols[position.evolution.bonusJ].couleur==ROU)
+    printf("!--!--!--!--!--! VOULEZ-VOUS CHANGER LE CHEMIN D'ACCES DU FICHIER ??? 1 POUR OUI, 0 POUR NON !--!--!--!--!--!\n");
+    scanf("%d",&rep);
+    
+    if(rep == 1)
     {
-        printf("\n\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre case:");
-        scanf("%hhd", &position.evolution.bonusJ);
-    }
-   
-    printf("\n\tAu tour du joueur 1 de donner la position de son malus :");
-    scanf("%hhd", &position.evolution.malusJ);            //saisie de la position du malus du joueur 1
-
-    while(position.cols[position.evolution.malusJ].couleur!=JAU || position.evolution.malusJ==position.evolution.bonusJ)
-    {
-        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
-        scanf("%hhd", &position.evolution.malusJ);
-    }
-
-    printf("\n\tAu tour du joueur 2 de donner la position de son bonus :");
-    scanf("%hhd", &position.evolution.bonusR);            //saisie de la position du bonus du joueur 2
-
-    while(position.cols[position.evolution.bonusR].couleur!=ROU)
-    {
-        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
-        scanf("%hhd", &position.evolution.bonusR);
+        printf("!--!--!--!--!--! VEUILLEZ RENSEIGNER LE NOUVEAU CHEMIN D'ACCES !--!--!--!--!--!\n");
+        while ((c = getchar()) != '\n' && c != EOF) { }
+        fgets(chemin, MAXNOM, stdin);
+        //strtok(chemin, "\n");
+        writeJS(position,score, chemin,desc, atoi(argv[1]));
     }
 
-    printf("\n\tAu tour du joueur 2 de donner la position de son malus :");
-    scanf("%hhd", &position.evolution.malusR);            //saisie de la position du malus du joueur 2
-
-    while(position.cols[position.evolution.malusR].couleur!=ROU || position.evolution.malusR==position.evolution.bonusR)
-    {
-        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
-        scanf("%hhd", &position.evolution.malusR);
-    }
-
-    writeJS(position, score, "./web/refresh-data.json");    //écriture du fichier JSON de la position initiale
-
-    /*******************************************************/
-    /*Déroulement de la partie                             */
-    /*Première fonction while qui servira de boucle de jeu */
-    /*******************************************************/
-
-    while(legaux.nb != 0)
-    {
-        printf("\n\tC'est au tour du joueur %d de jouer.\n", position.trait);    //affichage du joueur qui doit jouer
-
-        /***************************************************/
-        /*Système de coups                                 */
-        /***************************************************/
-
-        printf("\n\t!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!\n\n");
-        printf("\n\tEntrez la case de départ : ");              //demande de la case de départ
-        scanf("%hhd", &coup.origine);                             //saisie de la case de départ
-  
-        printf("\n\tEntrez la case d'arrivée : ");              //demande de la case d'arrivée
-        scanf("%hhd", &coup.destination);                         //saisie de la case d'arrivée
-
-        stockage = estValide(position, coup.origine, coup.destination);    //stockage de la validité du coup
-        
-        /***************************************************/
-        /*Vérification et mise en place du coup si valide  */
-        /***************************************************/
-
-        if(stockage == 1)                                                       //si le coup est valide
-        {
-            position = jouerCoup(position, coup.origine, coup.destination);     //jouer le coup
-            score = evaluerScore(position);                                     //évaluer le score
-            printf("\n\t!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!\n\n");
-        }
-        else                                                                    //si le coup n'est pas valide
-        {
-            printf("\n\t!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!\n\n");
-        }
-
-        fonctionFen(position);
-        writeJS(position, score, "./web/refresh-data.json");    //écriture du fichier JSON de la position actuelle
-        legaux=getCoupsLegaux(position);                                         //mise à jour des coups légaux
-    }
-
-    /*******************************************************/
-    /*Fin de la partie                                     */
-    /*******************************************************/
-
-    printf("\n\t!--!--!--!--!--!--!--!--! PARTIE TERMINÉE !--!--!--!--!--!--!--!--!\n\n");
-
-    /*******************************************************/
-    /*Affichage du gagnant ou de l'égalité                 */
-    /*******************************************************/
-
-    if(score.nbJ > score.nbR)                                                               //si le score des jaunes est supérieur au score des rouges
-    {
-        printf("\n\t!--!--!--!--!--! LE JOUEUR JAUNE GAGNE !! !--!--!--!--!--!\n");         //affichage de la victoire des jaunes
-    }
-    else if(score.nbJ < score.nbR)                                                          //si le score des jaunes est inférieur au score des rouges
-    {
-        printf("\n\t!--!--!--!--!--! LE JOUEUR ROUGE GAGNE !! !--!--!--!--!--!\n");                                               //affichage de la victoire des rouges
-    }
-    else                                                                                    //si les scores sont égaux
-    {
-        if(score.nbJ5 > score.nbR5)
-            printf("\n\t!--!--!--!--! LE JOUEUR JAUNE GAGNE GRACE A SES PILES DE 5 !--!--!--!--!");     //on prends en compte le nombre de pile de 5 de chaque joueur pour déterminer la victoire
-            
-        if(score.nbJ5 < score.nbR5)
-            printf("\n\t!--!--!--!--! LE JOUEUR ROUGE GAGNE GRACE A SES PILES DE 5 !--!--!--!--!");
-            
-        else
-            printf("\n\t!--!--!--!--! ÉGALITÉ !--!--!--!--!");                                //affichage de l'égalité
-    }
-
-}
     else
     {
-        printf("La chaine est en cours d'intréprétation\n");
-        position=interpreterFen(argv);
-        fonctionFen(position);
+        writeJS(position,score, "diagramme.js",desc, atoi(argv[1]));
     }
-    return 0;
-}
 
+}
 /***********************************************************/
 /*Fonction d'écriture du fichier JSON                      */
 /***********************************************************/
 
-void writeJS(T_Position position, T_Score score, char chaine_JS[])
+void writeJS(T_Position position, T_Score score, char chaine_JS[], char desc[], int numDiag)
 {
 
     FILE *fic ;
@@ -214,20 +98,28 @@ void writeJS(T_Position position, T_Score score, char chaine_JS[])
 
 
     fprintf(fic,"traiterJson({\n");
-    fprintf(fic, "%s;%d,\n", STR_TURN, position.trait);     //affichage du trait
-    fprintf(fic, "%s;%d,\n",STR_SCORE_J, score.nbJ);        //affichage du score des jaunes
-    fprintf(fic, "%s;%d,\n",STR_SCORE_J5, score.nbJ5);      //affichage du score des jaunes en pile de 5
-    fprintf(fic, "%s;%d,\n",STR_SCORE_R, score.nbR);        //affichage du score des rouges
-    fprintf(fic, "%s;%d,\n",STR_SCORE_R5, score.nbR5);      //affichage du score des rouges en pile de 5
-    fprintf(fic, "%s;%d,\n",STR_BONUS_J, position.evolution.bonusJ);    //affichage du bonus des jaunes
-    fprintf(fic, "%s;%d,\n",STR_MALUS_J, position.evolution.malusJ);    //affichage du malus des jaunes
-    fprintf(fic, "%s;%d,\n",STR_BONUS_R, position.evolution.bonusR);    //affichage du bonus des rouges
-    fprintf(fic, "%s;%d,\n",STR_MALUS_R, position.evolution.malusR);    //affichage du malus des rouges
+    fprintf(fic, "%s:%d,\n", STR_NUMDIAG, numDiag);             //affichage du numéro du diagramme
+    fprintf(fic, "%s:\"%s\",\n", STR_NOTES, desc);                //affichage de la description
+    fprintf(fic, "%s:%d,\n", STR_TURN, position.trait);     //affichage du trait
+    fprintf(fic, "%s:%d,\n",STR_SCORE_J, score.nbJ);        //affichage du score des jaunes
+    fprintf(fic, "%s:%d,\n",STR_SCORE_J5, score.nbJ5);      //affichage du score des jaunes en pile de 5
+    fprintf(fic, "%s:%d,\n",STR_SCORE_R, score.nbR);        //affichage du score des rouges
+    fprintf(fic, "%s:%d,\n",STR_SCORE_R5, score.nbR5);      //affichage du score des rouges en pile de 5
+    fprintf(fic, "%s:%d,\n",STR_BONUS_J, position.evolution.bonusJ);    //affichage du bonus des jaunes
+    fprintf(fic, "%s:%d,\n",STR_MALUS_J, position.evolution.malusJ);    //affichage du malus des jaunes
+    fprintf(fic, "%s:%d,\n",STR_BONUS_R, position.evolution.bonusR);    //affichage du bonus des rouges
+    fprintf(fic, "%s:%d,\n",STR_MALUS_R, position.evolution.malusR);    //affichage du malus des rouges
     fprintf(fic,"\"cols\":[\n");
 
     for(int i=0; i < NBCASES; i++)
     {
-        fprintf(fic,"\t {%s:%hhd, %s:%hhd},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);
+        if(position.cols[i].nb != 0 && position.cols[i].nb != 1 && position.cols[i].nb!=2 &&  position.cols[i].nb!=3 && position.cols[i].nb!=4 &&position.cols[i].nb!=5)
+        {
+            position.cols[i].nb=0; position.cols[i].couleur=0;
+            fprintf(fic,"\t {%s:%hhd, %s:%hhd},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);
+        }
+        else
+            fprintf(fic,"\t {%s:%hhd, %s:%hhd},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);
     }
         
         
@@ -244,13 +136,18 @@ void fonctionFen(T_Position position)
 {
     char chaine[100];
     int i,j=0,stock=0;
-    char nbvide[10];
+    char nbvide[1000000];
 
     for(i=0;i< NBCASES;i++)
     {
         if(position.cols[i].nb==0)
         {
             stock++;
+            if(i==position.evolution.bonusJ || i==position.evolution.malusJ || i==position.evolution.bonusR || i==position.evolution.malusR)
+            {
+               stock=0;
+            }
+
             while(i + 1 < NBCASES && position.cols[i + 1].nb == 0)
             {
             stock++;
@@ -359,73 +256,99 @@ void fonctionFen(T_Position position)
     }
     chaine[j+2]='\0';
 
+    
     printf("%s\n",chaine);
 }
 
-T_Position interpreterFen(char* argv[])
+/***********************************************************/
+/*Fonction d'interprétation de la chaine FEN               */
+/***********************************************************/
+
+T_Position interpreterFen(char* chaineFEN)
 {
     T_Position position;
     int i,j;
+    int stock=0;
+    char temp[100];
 
-    if (argv[2] == NULL) {
+    if (chaineFEN == NULL) {
         printf("Erreur : pas assez d'arguments.\n");
         exit(1);
     }
 
-    int len = strlen(argv[2]);
-    if (len < 48) {
-        printf("Erreur : l'argument n'est pas assez long.\n");
-        exit(1);
-    }
-
-    for(i=0;i<NBCASES;i++)
+    /* 
+    for(i=0;chaineFEN[i]!='\0';i++)
     {
-        if(argv[2][i] >= '0' && argv[2][i] <= '9')
+
+        if(chaineFEN[i] >= '0' && chaineFEN[i] <= '9')
         {
-            position.cols[i].nb = argv[2][i] - '0';
-            position.cols[i].couleur = VIDE;
+            position.cols[i].nb=0;
+            temp[0] = chaineFEN[i];
+            if(chaineFEN[i+1] >= '0' && chaineFEN[i+1] <= '9')
+            {
+                temp[1] = chaineFEN[i+1];
+                temp[2] = '\0';
+                i++;
+            }
+            else
+            {
+                temp[1] = '\0';
+            }
+            stock=atoi(temp);
+
+            for(j=i;j<i+stock-2;j++)
+            {
+                position.cols[j].nb=0;
+                position.cols[j].couleur=0;
+            }
+            j=i+stock;
         }
-        switch(argv[2][i])
+        else
+        {
+            j=(i+stock);
+        }
+        switch(chaineFEN[i])
         {
             case 'u':
-                position.cols[i].nb=1;
-                position.cols[i].couleur=JAU;
+                position.cols[j].nb=1;
+                position.cols[j].couleur=JAU;
                 break;
             case 'd':
-                position.cols[i].nb=2;
-                position.cols[i].couleur=JAU;
+                position.cols[j].nb=2;
+                position.cols[j].couleur=JAU;
                 break;
             case 't':
-                position.cols[i].nb=3;
-                position.cols[i].couleur=JAU;
+                position.cols[j].nb=3;
+                position.cols[j].couleur=JAU;
                 break;
             case 'q':
-                position.cols[i].nb=4;
-                position.cols[i].couleur=JAU;
+
+                position.cols[j].nb=4;
+                position.cols[j].couleur=JAU;
                 break;
             case 'c':
-                position.cols[i].nb=5;
-                position.cols[i].couleur=JAU;
+                position.cols[j].nb=5;
+                position.cols[j].couleur=JAU;
                 break;
             case 'U':
-                position.cols[i].nb=1;
-                position.cols[i].couleur=ROU;
+                position.cols[j].nb=1;
+                position.cols[j].couleur=ROU;
                 break;
             case 'D':
-                position.cols[i].nb=2;
-                position.cols[i].couleur=ROU;
+                position.cols[j].nb=2;
+                position.cols[j].couleur=ROU;
                 break;
             case 'T':
-                position.cols[i].nb=3;
-                position.cols[i].couleur=ROU;
+                position.cols[j].nb=3;
+                position.cols[j].couleur=ROU;
                 break;
             case 'Q':
-                position.cols[i].nb=4;
-                position.cols[i].couleur=ROU;
+                position.cols[j].nb=4;
+                position.cols[j].couleur=ROU;
                 break;
             case 'C':
-                position.cols[i].nb=5;
-                position.cols[i].couleur=ROU;
+                position.cols[j].nb=5;
+                position.cols[j].couleur=ROU;
                 break;
             case 'b':
                 position.evolution.bonusJ=i;
@@ -447,6 +370,186 @@ T_Position interpreterFen(char* argv[])
                 break;
         }
     }
+    */
 
+   for(i = 0; i < NBCASES && chaineFEN[i] != '\0'; i++) {
+    switch(chaineFEN[i]) {
+       case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
+        temp[0] = chaineFEN[i];
+        temp[1] = '\0';
+
+        // Check if the next character is also a digit
+        if(chaineFEN[i+1] >= '0' && chaineFEN[i+1] <= '9') 
+        {
+            temp[1] = chaineFEN[i+1];
+            temp[2] = '\0';
+            i++; // Skip the next character as we have already processed it
+        }
+
+    stock = atoi(temp);
+
+    for(int j = 0; j < stock; j++) 
+    {
+        position.cols[i+j].nb = 0;
+        position.cols[i+j].couleur = 0;
+    }
+
+    i += stock - 1;
+    break;
+        case 'u':
+            position.cols[i].nb = 1;
+            position.cols[i].couleur = JAU;
+            break;
+        case 'U':
+            position.cols[i].nb = 1;
+            position.cols[i].couleur = ROU;
+            break;
+        case 'd':
+            position.cols[i].nb = 2;
+            position.cols[i].couleur = JAU;
+            break;
+        case 'D':
+            position.cols[i].nb = 2;
+            position.cols[i].couleur = ROU;
+            break;
+        case 't':
+            position.cols[i].nb = 3;
+            position.cols[i].couleur = JAU;
+            break;
+        case 'T':
+            position.cols[i].nb = 3;
+            position.cols[i].couleur = ROU;
+            break;
+        case 'q':
+            position.cols[i].nb = 4;
+            position.cols[i].couleur = JAU;
+            break;
+        case 'Q':
+            position.cols[i].nb = 4;
+            position.cols[i].couleur = ROU;
+            break;
+        case 'c':
+            position.cols[i].nb = 5;
+            position.cols[i].couleur = JAU;
+            break;
+        case 'C':
+            position.cols[i].nb = 5;
+            position.cols[i].couleur = ROU;
+            break;
+        case 'r':
+            position.trait = ROU;
+            break;
+        case 'j':
+            position.trait = JAU;
+            break;
+    }
+}
+    return position;
+}
+
+
+T_Position lireFEN(char *chaineFEN)
+{
+    int i=0,j=0,stock,save;
+    char intstock[3];
+    T_Position position;
+
+    while(chaineFEN[i]!='\0')
+    {
+        save=j;
+        if(chaineFEN[i]>='0' && chaineFEN[i]<='9')
+        {
+            if(chaineFEN[i+1]>='0' && chaineFEN[i+1]<='9')
+            {
+                intstock[0]=chaineFEN[i];
+                intstock[1]=chaineFEN[i+1];
+                intstock[2]='\0';
+
+                stock=atoi(intstock);
+                for(j=save;j<=stock;j++)
+                {
+                    position.cols[j].nb=0;
+                    position.cols[j].couleur=0;
+                }
+                i=i+2;
+            }
+            else
+            {
+                intstock[0]=chaineFEN[i];
+                intstock[1]='\0';
+                stock=atoi(intstock);
+                for(j=save;j<=stock;j++)
+                {
+                    position.cols[j].nb=0;
+                    position.cols[j].couleur=0;
+                }
+                i++;
+            }
+        }
+        else
+        {
+            switch(chaineFEN[i])
+            {
+                case 'u':
+                    position.cols[j].nb=1;
+                    position.cols[j].couleur=JAU;
+                    break;
+                case 'd':
+                    position.cols[j].nb=2;
+                    position.cols[j].couleur=JAU;
+                    break;
+                case 't':
+                    position.cols[j].nb=3;
+                    position.cols[j].couleur=JAU;
+                    break;
+                case 'q':
+                    position.cols[j].nb=4;
+                    position.cols[j].couleur=JAU;
+                    break;
+                case 'c':
+                    position.cols[j].nb=5;
+                    position.cols[j].couleur=JAU;
+                    break;
+                case 'U':
+                    position.cols[j].nb=1;
+                    position.cols[j].couleur=ROU;
+                    break;
+                case 'D':
+                    position.cols[j].nb=2;
+                    position.cols[j].couleur=ROU;
+                    break;
+                case 'T':
+                    position.cols[j].nb=3;
+                    position.cols[j].couleur=ROU;
+                    break;
+                case 'Q':
+                    position.cols[j].nb=4;
+                    position.cols[j].couleur=ROU;
+                    break;
+                case 'C':
+                    position.cols[j].nb=5;
+                    position.cols[j].couleur=ROU;
+                    break;
+
+                case 'b':
+                    position.evolution.bonusJ=j;
+                    break;
+                
+                case 'm':
+                    position.evolution.malusJ=j;
+                    break;
+                
+                case 'B':
+                    position.evolution.bonusR=j;
+                    break;
+                
+                case 'M':
+                    position.evolution.malusR=j;
+                    break;
+            }
+            j++;
+            i++;
+        }
+    }
     return position;
 }
