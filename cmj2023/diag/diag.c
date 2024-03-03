@@ -21,7 +21,7 @@
 #include <string.h>                 //for the string manipulation
 #include "../include/avalam.h"      //for game functions
 #include "../include/topologie.h"   //for the topologie
-#define MAXNOM 20
+#define MAXNOM 100
 #define MAXCHAR 1000
 
 /***********************************************************/
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     /*******************************************************/    
 
     char *chaineF=argv[2],*description="";;                         //chaineF is the FEN string, description is the description of the file
-    char desc[MAXCHAR],chemin[MAXNOM]="diag_ressources.json";       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
+    char desc[MAXCHAR],chemin[MAXNOM]="./web/data/diag_ressources.json";       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
     int rep,c,j,longueur,stockage;                                  //these are some variables for the programm
     octet i,stock=0;                                                //i is a variable for the loop, stock is a variable which surves to stock the number of empty cases
     T_Position position;                                            //position is the position of the game

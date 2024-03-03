@@ -69,7 +69,7 @@ int main()
     printf0("_DEBUG_ LA PARTIE COMMENCE\n");
 
     printf("\tC'est au tour du joueur %d de jouer.\n", position.trait);    //showing the player who has to play
-    fonctionFen(position);                                               //writting of the FEN format of the position
+    //fonctionFen(position);                                               //writting of the FEN format of the position
     printf0("_DEBUG_ ECRITURE DE LA POSITION :: NON OBLIGATOIRE\n");
 
     /*******************************************************/
@@ -128,7 +128,7 @@ int main()
 
     printf0("_DEBUG_ POSITION EN ECRITURE\n");
 
-    fonctionFen(position);                                   //writting of the FEN format of the position
+    //fonctionFen(position);                                   //writting of the FEN format of the position
   
 
     /*******************************************************/
@@ -251,11 +251,14 @@ void writeJS(T_Position position, T_Score score, char chaine_JS[])
 {
 
     FILE *fic ;
-    fic = fopen(chaine_JS, "w");
+    char path[1000],defaultPath[1000]="../web/data/refresh-data.json";
+
+    fic = fopen(defaultPath, "w");
 
     if(fic == NULL)
     {
-        printf("Erreur lors de l'ouverture du fichier");
+        printf("Erreur lors de l'ouverture du fichier\n");
+        printf("Exécutez le programme depuis le répertoire courant de son emplacement (à l'intérieur du répertoire /build).\n");
         exit(1);
     }
 
