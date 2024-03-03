@@ -1,0 +1,31 @@
+Script started on Sat Mar  2 23:30:20 2024
+[1m[7m%[27m[1m[0m                                                                                                                                                        [0m[27m[24m[Jbaptiste@MacBook-Pro-de-Baptiste cmj2023 % [K[?2004hbbuild/diag.exe 1 [7mt2dMtb10UBDm10U20 r [27m[20D[27mt[27m2[27md[27mM[27mt[27mb[27m1[27m0[27mU[27mB[27mD[27mm[27m1[27m0[27mU[27m2[27m0[27m [27mr[27m r \r  r [1C[?2004l
+!--!--!--!--!--! VEUILLEZ ENTREZ UNE DESCRIPTION POUR LE DIAGRAMME !--!--!--!--!--!
+Voc ici     Ceci est une description pour le premier degram     iagramme, diagramme de test.
+!--!--!--!--!--! CARACTÉRISTIQUES DU FICHIER !--!--!--!--!--!
+!--! DIAGRAMME NUMÉRO : 1 !--!
+!--! CHAINE FEN : t2dMtb10UBDm10U20 r !--!
+!--! DESCRIPTION : Ceci est une description pour le premier diagramme, diagramme de test. !--!
+!--!--!--!--!--! FIN DES CARACTÉRISTIQUES !--!--!--!--!--!--!
+!--!--!--!--!--! VOULEZ-VOUS CHANGER LE CHEMIN D'ACCES DU FICHIER ??? 1 POUR OUI, 0 POUR NON !--!--!--!--!--!
+1
+!--!--!--!--!--! VEUILLEZ RENSEIGNER LE NOUVEAU CHEMIN D'ACCES !--!--!--!--!--!
+jeu. _essais_diag.js
+[1m[7m%[27m[1m[0m                                                                                                                                                        [0m[27m[24m[Jbaptiste@MacBook-Pro-de-Baptiste cmj2023 % [K[?2004hbuild/diag.exe 1 t2dMtb10UBDm10U20\ r [P[21C [22D[P[21C [22D[?2004l
+!--!--!--!--!--! ERREUR CRITIQUE : NOMBRE D'ARGUMENTS TROP IMPORTANT. SYNTAXE AUTORISÉE: EXE NUMDIAG FEN !--!--!--!--!--!
+[1m[7m%[27m[1m[0m                                                                                                                                                        [0m[27m[24m[Jbaptiste@MacBook-Pro-de-Baptiste cmj2023 % [K[?2004hbuild/diag.exe t2dMtb10UBDm10U20\ r  1t2dMtb10UBDm10U20\  [20D t2dMtb10UBDm10U20\  [20D[?2004l
+!--!--!--!--!--! ERREUR CRITIQUE : LE TRAIT N'EST PAS RENSEIGNÉ !--!--!--!--!--!
+[1m[7m%[27m[1m[0m                                                                                                                                                        [0m[27m[24m[Jbaptiste@MacBook-Pro-de-Baptiste cmj2023 % [K[?2004hbuild/diag.exe 1 t2dMtb10UBDm10U20\  [22D[P[P[19Cr  [21D1 t2dMtb10UBDm10U20\ r [?2004l
+!--!--!--!--!--! VEUILLEZ ENTREZ UNE DESCRIPTION POUR LE DIAGRAMME !--!--!--!--!--!
+
+!--!--!--!--!--! CARACTÉRISTIQUES DU FICHIER !--!--!--!--!--!
+!--! DIAGRAMME NUMÉRO : 1 !--!
+!--! CHAINE FEN : t2dMtb10UBDm10U20 r !--!
+!--! DESCRIPTION : 
+ !--!
+!--!--!--!--!--! FIN DES CARACTÉRISTIQUES !--!--!--!--!--!--!
+!--!--!--!--!--! VOULEZ-VOUS CHANGER LE CHEMIN D'ACCES DU FICHIER ??? 1 POUR OUI, 0 POUR NON !--!--!--!--!--!
+0
+[1m[7m%[27m[1m[0m                                                                                                                                                        [0m[27m[24m[Jbaptiste@MacBook-Pro-de-Baptiste cmj2023 % [K[?2004h     eexit[?2004l
+
+Script done on Sat Mar  2 23:32:39 2024

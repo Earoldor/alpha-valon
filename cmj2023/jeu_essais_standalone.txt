@@ -1,0 +1,526 @@
+Script started on Fri Mar  1 11:26:45 2024                               
+ 
+file://MacBook-Pro-de-Baptiste.local/Users/baptiste/Documents/IG2I/L1/Dev/alphavalon/alpha-valon/cmj2023
+
+
+	!--!--!--!--!--!--!--!--! JOUONS À AVALAM !--!--!--!--!--!--!--!--!
+
+	!--!--!--!--!--!--!--!--! LA PARTIE COMMENCE !--!--!--!--!--!--!--!--!
+
+	C'est au tour du joueur 1 de jouer.
+
+	Au tour du joueur 1 de donner la position de son bonus :3
+
+	Au tour du joueur 1 de donner la position de son malus :21
+
+	Au tour du joueur 2 de donner la position de son bonus :31
+
+	Au tour du joueur 2 de donner la position de son malus :47
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 1
+
+	Entrez la case d'arrivée : 0
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 2
+
+	Entrez la case d'arrivée : 0
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 3
+
+	Entrez la case d'arrivée : 0
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 55
+
+	Entrez la case d'arrivée : 0
+jouerCoup impossible : cases 5 et 0 inaccessibles! 
+
+	!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 4
+
+	Entrez la case d'arrivée : 0
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 13
+
+	Entrez la case d'arrivée : 14
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 14
+
+	Entrez la case d'arrivée : 7
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 22
+
+	Entrez la case d'arrivée : 29
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 7
+
+	Entrez la case d'arrivée : 8
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 9
+
+	Entrez la case d'arrivée : 8
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 8
+
+	Entrez la case d'arrivée : 15
+jouerCoup impossible : trop de jetons entre 8 et 15 ! 
+
+	!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 5
+
+	Entrez la case d'arrivée : 10
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 11
+
+	Entrez la case d'arrivée : 16
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 17
+
+	Entrez la case d'arrivée : 25
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 10
+
+	Entrez la case d'arrivée : 26
+jouerCoup impossible : cases 10 et 26 inaccessibles! 
+
+	!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 10
+
+	Entrez la case d'arrivée : 26
+jouerCoup impossible : cases 10 et 26 inaccessibles! 
+
+	!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 10
+
+	Entrez la case d'arrivée : 16
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 1 21
+
+	Entrez la case d'arrivée : 12
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 20
+
+	Entrez la case d'arrivée : 28
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 29
+
+	Entrez la case d'arrivée : 28
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 30
+
+	Entrez la case d'arrivée : 36
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 32
+
+	Entrez la case d'arrivée : 31
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 37
+
+	Entrez la case d'arrivée : 38
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 31
+
+	Entrez la case d'arrivée : 23
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 47
+
+	Entrez la case d'arrivée : 46
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 42
+
+	Entrez la case d'arrivée : 46
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 39
+
+	Entrez la case d'arrivée : 38
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 43
+
+	Entrez la case d'arrivée : 38
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : é
+Entrée invalide. Veuillez entrer un nombre.
+
+	Entrez la case de départ : r
+Entrée invalide. Veuillez entrer un nombre.
+
+	Entrez la case de départ : 15
+
+	Entrez la case d'arrivée : 16
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 18
+
+	Entrez la case d'arrivée : 189
+jouerCoup impossible : cases 18 et 189 inaccessibles! 
+
+	!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 19 8
+
+	Entrez la case d'arrivée : 19
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 26
+
+	Entrez la case d'arrivée : 19
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 27
+
+	Entrez la case d'arrivée : 19
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 24
+
+	Entrez la case d'arrivée : 33
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 40
+
+	Entrez la case d'arrivée : 41
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 25
+
+	Entrez la case d'arrivée : 34
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 35
+
+	Entrez la case d'arrivée : 34
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 
+2 44
+
+	Entrez la case d'arrivée : 45
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 2 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 41
+
+	Entrez la case d'arrivée : 45
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	C'est au tour du joueur 1 de jouer.
+
+	!--!--!--!--!--!--!--!--! QUELLE COUP VOULEZ-VOUS JOUER ? !--!--!--!--!--!--!--!--!
+
+
+	Entrez la case de départ : 6
+
+	Entrez la case d'arrivée : 12
+
+	!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!
+
+
+	!--!--!--!--!--!--!--!--! PARTIE TERMINÉE !--!--!--!--!--!--!--!--!
+
+
+	!--!--!--!--!--! LE JOUEUR ROUGE GAGNE !! !--!--!--!--!--!                                        
+ 
+;file://MacBook-Pro-de-Baptiste.local/Users/baptiste/Documents/IG2I/L1/Dev/alphavalon/alpha-valon/cmj2023
+
+
+
+Saving session...
+...copying shared history...
+...saving history...truncating history files...
+...completed.
+Deleting expired sessions...none found.
+

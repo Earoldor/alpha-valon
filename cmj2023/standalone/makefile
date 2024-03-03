@@ -7,15 +7,15 @@ debug: dep install
 dep: 
 	cd ../libavalam; make
 
-install: standalone.static standalone.exe
+install:standalone.exe  standalone.static 
 	cp standalone.exe ../build/
 	cp standalone.static ../build/
 
-LIB=-L../build/
+LIB=-L../build/lib/
 INC=-I../include
 
 standalone.exe:standalone.c 
-	gcc $(DEBUG) $(LIB) -lavalam $(INC) standalone.c -o standalone.exe 
+	gcc $(DEBUG) $(LIB) $(INC) standalone.c -o standalone.exe -lavalam 
 
 standalone.static:standalone.c 
 	gcc -static $(DEBUG) $(INC) $(LIB)  standalone.c -o standalone.static  -lavalam

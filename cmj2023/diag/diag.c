@@ -1,135 +1,284 @@
 /***********************************************************/
-/*Groupe : La Valeur                                       */
-/*Numéro du groupe : 1                                     */
-/*Composition du groupe :                                  */
+/*Group : La Valeur                                        */
+/*Group number : 1                                         */
+/*Group composition :                                      */
 /* OUAZZANI CHAHDI Oualid                                  */
-/* VOROBIEFF--NAWROT Clément                               */
+/* VOROBIEFF -- NAWROT Clément                             */
 /* DESVIGNE Arthur                                         */
 /* DEBROUCKER Baptiste                                     */
-/*Horodatage de création de ce fichier : 19/02/24          */
+/*Date of original creation : 19/02/24                     */
+/*Version : 1.0 - Without Debugging Mode                   */
 /***********************************************************/
 
 // Path: alpha-valon/cmj2023/diag/diag.c
 
 /***********************************************************/
-/*Déclaration des librairies. Nous aurons besoins des      */
-/*librairies de base du langage C, ainsi que celle fournies*/
+/*Library declaration. We will need other libraries from C */
 /***********************************************************/
 
 #include <stdio.h>                  //standard input output
 #include <stdlib.h>                 //standard également
-#include <string.h>                 //pour le traitement de chaine de caractère
-#include "../include/avalam.h"      //pour les fonctions de jeu
-#include "../include/topologie.h"   //pour la topologie du plateau
+#include <string.h>                 //for the string manipulation
+#include "../include/avalam.h"      //for game functions
+#include "../include/topologie.h"   //for the topologie
 #define MAXNOM 20
 #define MAXCHAR 1000
 
 /***********************************************************/
-/*Déclaration des prototypes                               */
+/*Prototype Declaration                                    */
 /***********************************************************/
 
-void writeJS(T_Position position, T_Score score, char chaine_JS[], char desc[], int numDiag); //prototype de la fonction d'écriture du fichier JSON
-void fonctionFen(T_Position position);                              //prototype de la fonction d'écriture du format FEN
-T_Position interpreterFen(char* chaineFEN);                                //prototype de la fonction d'interprétation du format FEN
-T_Position lireFEN(char *chaineFEN);
+void fonctionFen(T_Position position);                              //prototype de la fonction d'écriture du format FEN (rajouté par Clément)
+
 /***********************************************************/
-/*Fonction principale : main                               */
+/*Principal function : main                               */
 /***********************************************************/
 
 int main(int argc, char* argv[])
 {
-    char *chaineF=argv[2]; //chaineFEN est la chaine de caractère qui contient la FEN
-    char desc[MAXCHAR];             //desc est la chaine de caractère qui contient la description du fichier
-    int rep,c;
-    char chemin[MAXNOM];
-    T_Position position;
-    T_Score score=evaluerScore(position);
-    
+    /*******************************************************/
+    /*Variables declaration                                */
+    /*******************************************************/    
 
+    char *chaineF=argv[2],*description="";;                         //chaineF is the FEN string, description is the description of the file
+    char desc[MAXCHAR],chemin[MAXNOM]="diag_ressources.json";       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
+    int rep,c,j,longueur,stockage;                                  //these are some variables for the programm
+    octet i,stock=0;                                                //i is a variable for the loop, stock is a variable which surves to stock the number of empty cases
+    T_Position position;                                            //position is the position of the game
+    FILE *fic ;                                                     //fic is a file pointer
 
-    if(argc != 3)   //Condition d'erreur pour le nombre d'arguments passé en ligne de commandes
+    /*******************************************************/
+    /*Programm start                                       */
+    /*******************************************************/
+
+    if(argc != 3)                                                   //here, we verify that the number of arguments is correct
     {
         fprintf(stderr, "!--!--!--!--!--! ERREUR CRITIQUE : NOMBRE D'ARGUMENTS TROP IMPORTANT. SYNTAXE AUTORISÉE: EXE NUMDIAG FEN !--!--!--!--!--!\n");
-        exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);                                         //if not, we stop the programm
+    }       
+
+    printf0("_DEBUG_ CHECKING DU NOMBRE D'ARGUMENTS\n");
+
+    /*******************************************************/
+    /*Checking the turn                                    */
+    /*******************************************************/
+
+    longueur=strlen(argv[2]);                                       //longueur is the length of the string argv[2]
+
+    if(argv[2][longueur-1]!='r' && argv[2][longueur-1]!='j')        //if the last character of the string argv[2] is not 'r' or 'j'
+    {
+        printf("!--!--!--!--!--! ERREUR CRITIQUE : LE TRAIT N'EST PAS RENSEIGNÉ !--!--!--!--!--!\n");  
+
+        printf0("_DEBUG_ PAS DE TRAIT -> ARRET\n");
+
+        exit(EXIT_FAILURE);                                         //we stop the programm
     }
+
+    if(argv[2][longueur-1]=='r')                                    //if the last character of the string argv[2] is 'r'
+        position.trait=ROU;                                         //the trait is for the red player
+    else                                                            //if the last character of the string argv[2] is 'j'                
+        position.trait=JAU;                                         //the trait is for the yellow player
+
+    printf0("_DEBUG_ TRAIT -> ROUGE OU JAUNE\n");
+
+    /*******************************************************/
+    /*Asking of the description of the file                */
+    /*******************************************************/
+
+    //FILE *ficdesc;                                                 //we declare a file pointer                               
+
+    //ficdesc=fopen("description.txt","r");                          //we open the file description.txt in read mode
+    //fread(description,1,MAXCHAR,ficdesc);                          //we read the file description.txt which contains the description of the file
+    //fclose(ficdesc);                                               //we close the file description.txt      
+
+    printf0("_DEBUG_ RECUPERATION DESCRIPTION ENTRÉE PAR REDIRECTION\n");
 
     printf("!--!--!--!--!--! VEUILLEZ ENTREZ UNE DESCRIPTION POUR LE DIAGRAMME !--!--!--!--!--!\n");
-    fgets(desc, MAXCHAR, stdin); //on demande à l'utilisateur de rentrers la description du fichier
-    strtok(desc, "\n"); //on supprime le retour à la ligne du au fgets
+
+    fgets(desc, MAXCHAR, stdin);                                    //we ask to the user to enter the description of the file
+    strtok(desc, "\n");                                             //we remove the '\n' character at the end of the string because fgets() keeps it
     
-    if(desc==NULL)
+    if(strcmp(desc,"")==0)                                          //if the description is empty
         printf("!--!--!--!--!--! DESCRIPTION NON RENSEIGNÉE !--!--!--!--!--!\n");
 
+    printf0("_DEBUG_ RECUPERATION DESCRIPTION ENTRÉE PAR CLAVIER\n");
+
+    /*******************************************************/
+    /*Display of the characteristics of the file           */
+    /*******************************************************/
+
+
     printf("!--!--!--!--!--! CARACTÉRISTIQUES DU FICHIER !--!--!--!--!--!\n");
-    printf("!--! DIAGRAMME NUMÉRO : %s !--!\n", argv[1]);
-    printf("!--! CHAINE FEN : %s !--!\n",chaineF);
-    printf("!--! DESCRIPTION : %s !--!\n",desc);
+
+    printf("!--! DIAGRAMME NUMÉRO : %s !--!\n", argv[1]);           //we display the number of the diagram
+    printf("!--! CHAINE FEN : %s !--!\n",chaineF);                  //we display the FEN string
+    
+    if(strcmp(desc,"")==0)                                          //if the description is empty
+        printf("!--! DESCRIPTION : %s !--!\n",description);         //we display the description enters via a redirection
+    else                                                            //else
+        printf("!--! DESCRIPTION : %s !--!\n",desc);                //we display the description enters via the keyboard
+    
     printf("!--!--!--!--!--! FIN DES CARACTÉRISTIQUES !--!--!--!--!--!--!\n");
 
-    position = lireFEN(chaineF); //on interprète la chaine FEN
+    printf0("_DEBUG_ AFFICHAGE DES CARACTERISTIQUES DU FICHIER\n");
+
+    /*******************************************************/
+    /*Asking of the file path                              */
+    /*******************************************************/
+
 
     printf("!--!--!--!--!--! VOULEZ-VOUS CHANGER LE CHEMIN D'ACCES DU FICHIER ??? 1 POUR OUI, 0 POUR NON !--!--!--!--!--!\n");
-    scanf("%d",&rep);
+    scanf("%d",&rep);                                                //we ask to the user if he wants to change the path of the file
     
-    if(rep == 1)
+    if(rep == 1)                                                    //if the user wants to change the path of the file
     {
         printf("!--!--!--!--!--! VEUILLEZ RENSEIGNER LE NOUVEAU CHEMIN D'ACCES !--!--!--!--!--!\n");
-        while ((c = getchar()) != '\n' && c != EOF) { }
-        fgets(chemin, MAXNOM, stdin);
-        //strtok(chemin, "\n");
-        writeJS(position,score, chemin,desc, atoi(argv[1]));
+
+        while ((c = getchar()) != '\n' && c != EOF) { }             //we clear the buffer
+
+        fgets(chemin, MAXNOM, stdin);                               //we ask to the user to enter the new path of the file
+        strtok(chemin, "\n");                                       //we remove the '\n' character at the end of the string because fgets() keeps it
     }
 
+    printf0("_DEBUG_ RECUPERATION DU CHEMIN D'ACCES DU FICHIER\n");
+
+    /*******************************************************/
+    /*Writting of the JSON File                            */
+    /*******************************************************/
+
+    fic = fopen(chemin, "w");                                       //we open the file in write mode
+
+    fprintf(fic,"traiterJson({\n");                                 //we write the beginning of the file
+
+    fprintf(fic, "%s:%s,\n", STR_NUMDIAG, argv[1]);                 //we write the number of the diagram
+
+    if(strcmp(desc,"")==0)
+        fprintf(fic, "%s:\"%s\",\n", STR_NOTES, description);       //we write the description of the file if the description by the keyboard is empty
     else
+        fprintf(fic, "%s:\"%s\",\n", STR_NOTES, desc);              //we write the description of the file if the description by the keyboard is not empty
+
+    fprintf(fic, "%s:%d,\n", STR_TURN,position.trait);              //we write the turn of the game
+
+    fprintf(fic,"\"cols\":[\n");                                    //we write the beginning of the columns
+
+    i=0,j=0;                                                        //we initialize the variables i and j
+
+    while(i<NBCASES+1)                                              //while i is less than the number of cases
     {
-        writeJS(position,score, "diagramme.js",desc, atoi(argv[1]));
-    }
-
-}
-/***********************************************************/
-/*Fonction d'écriture du fichier JSON                      */
-/***********************************************************/
-
-void writeJS(T_Position position, T_Score score, char chaine_JS[], char desc[], int numDiag)
-{
-
-    FILE *fic ;
-    fic = fopen(chaine_JS, "w");
-
-
-    fprintf(fic,"traiterJson({\n");
-    fprintf(fic, "%s:%d,\n", STR_NUMDIAG, numDiag);             //affichage du numéro du diagramme
-    fprintf(fic, "%s:\"%s\",\n", STR_NOTES, desc);                //affichage de la description
-    fprintf(fic, "%s:%d,\n", STR_TURN, position.trait);     //affichage du trait
-    fprintf(fic, "%s:%d,\n",STR_SCORE_J, score.nbJ);        //affichage du score des jaunes
-    fprintf(fic, "%s:%d,\n",STR_SCORE_J5, score.nbJ5);      //affichage du score des jaunes en pile de 5
-    fprintf(fic, "%s:%d,\n",STR_SCORE_R, score.nbR);        //affichage du score des rouges
-    fprintf(fic, "%s:%d,\n",STR_SCORE_R5, score.nbR5);      //affichage du score des rouges en pile de 5
-    fprintf(fic, "%s:%d,\n",STR_BONUS_J, position.evolution.bonusJ);    //affichage du bonus des jaunes
-    fprintf(fic, "%s:%d,\n",STR_MALUS_J, position.evolution.malusJ);    //affichage du malus des jaunes
-    fprintf(fic, "%s:%d,\n",STR_BONUS_R, position.evolution.bonusR);    //affichage du bonus des rouges
-    fprintf(fic, "%s:%d,\n",STR_MALUS_R, position.evolution.malusR);    //affichage du malus des rouges
-    fprintf(fic,"\"cols\":[\n");
-
-    for(int i=0; i < NBCASES; i++)
-    {
-        if(position.cols[i].nb != 0 && position.cols[i].nb != 1 && position.cols[i].nb!=2 &&  position.cols[i].nb!=3 && position.cols[i].nb!=4 &&position.cols[i].nb!=5)
+        if(stock>0)                                                 //if stock is positive
         {
-            position.cols[i].nb=0; position.cols[i].couleur=0;
-            fprintf(fic,"\t {%s:%hhd, %s:%hhd},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);
+            if(i!=NBCASES && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                      //if i is different from the number of cases and the character is different from 'B', 'b', 'M' and 'm'
+                fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);   //we write the number and the color of the case set to 0 with ','
+            else if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                              //else
+                fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);    //we write the number and the color of the case set to 0 without ','
+
+            stock--;                                                //we decrement stock
         }
-        else
-            fprintf(fic,"\t {%s:%hhd, %s:%hhd},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);
+        else if (chaineF[j]>='0' && chaineF[j]<='9')                //if the character is a number
+        {
+            if(chaineF[j+1]>='0' && chaineF[j+1]<='9')              //and if the next character is a number
+            {
+                stock = (chaineF[j+1]-'0')+10*(chaineF[j]-'0');     //we stock the number in stock
+                j++;                                                //we increment j
+            }
+            else                                                    //else                              
+            {
+                stock = (chaineF[j]-'0');                           //we stock the number in stock
+            }
+
+            stockage=stock;                                         //we stock the value of stock in stockage
+        }
+        
+        else                                                        //if the character is not a number
+        {
+            switch(chaineF[j])                                      //we enter in a switch case
+            {
+            case 'u':
+                position.cols[i].nb = 1;
+                position.cols[i].couleur = JAU;
+                break;
+            case 'U':
+                position.cols[i].nb = 1;
+                position.cols[i].couleur = ROU;
+                break;
+            case 'd':
+                position.cols[i].nb = 2;
+                position.cols[i].couleur = JAU;
+                break;
+            case 'D':
+                position.cols[i].nb = 2;
+                position.cols[i].couleur = ROU;
+                break;
+            case 't':
+                position.cols[i].nb = 3;
+                position.cols[i].couleur = JAU;
+                break;
+            case 'T':
+                position.cols[i].nb = 3;
+                position.cols[i].couleur = ROU;
+                break;
+            case 'q':
+                position.cols[i].nb = 4;
+                position.cols[i].couleur = JAU;
+                break;
+            case 'Q':
+                position.cols[i].nb = 4;
+                position.cols[i].couleur = ROU;
+                break;
+            case 'c':
+                position.cols[i].nb = 5;
+                position.cols[i].couleur = JAU;
+                break;
+            case 'C':
+                position.cols[i].nb = 5;
+                position.cols[i].couleur = ROU;
+                break;
+            case 'B':
+                position.evolution.bonusR = i-stockage;              //we stock the value of i-stockage in the bonusR
+                break;
+            case 'b':
+                position.evolution.bonusJ = 0;                      
+                position.evolution.bonusJ = i-stockage;             //we stock the value of i-stockage in the bonusJ
+                break;
+            case 'M':
+                position.evolution.malusR = i-stockage;             //we stock the value of i-stockage in the malusR
+                break;  
+            case 'm':
+                position.evolution.malusJ = 0;
+                position.evolution.malusJ = i-stockage;             //we stock the value of i-stockage in the malusJ
+                break;
+        }
+
+        if(i!=NBCASES && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                      
+            fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);           //we write the number and the color of the case with ','
+        else if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
+            fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);            //we write the number and the color of the case without ','
     }
-        
-        
-    fprintf(fic,"]\n");
+
+    i++;                                                            //we increment i
+
+    if(stock==0)                                                    //if stock is equal to 0
+        j++;                                                        //we increment j
+
+    }
+
+    fprintf(fic,"],\n");
+    fprintf(fic, "%s:%d,\n",STR_BONUS_J, position.evolution.bonusJ);    //writing of the bonus of the yellow player
+    fprintf(fic, "%s:%d,\n",STR_MALUS_J, position.evolution.malusJ);    //writing of the malus of the yellow player
+    fprintf(fic, "%s:%d,\n",STR_BONUS_R, position.evolution.bonusR);    //writing of the bonus of the red player
+    fprintf(fic, "%s:%d,\n",STR_MALUS_R, position.evolution.malusR);    //writing of the malus of the red player
     fprintf(fic,"});");
     fclose(fic);
+    
+    printf0("_DEBUG_ ECRITURE DU FICHIER JSON\n");
+
+    printf0("_DEBUG_ FIN DU PROGRAMME\n");
+    return 0;
+
 }
 
 /***********************************************************/
-/*Fonction d'écriture du format FEN                        */
+/*Writing function of position to FEN                      */
 /***********************************************************/
 
 void fonctionFen(T_Position position)
@@ -258,298 +407,4 @@ void fonctionFen(T_Position position)
 
     
     printf("%s\n",chaine);
-}
-
-/***********************************************************/
-/*Fonction d'interprétation de la chaine FEN               */
-/***********************************************************/
-
-T_Position interpreterFen(char* chaineFEN)
-{
-    T_Position position;
-    int i,j;
-    int stock=0;
-    char temp[100];
-
-    if (chaineFEN == NULL) {
-        printf("Erreur : pas assez d'arguments.\n");
-        exit(1);
-    }
-
-    /* 
-    for(i=0;chaineFEN[i]!='\0';i++)
-    {
-
-        if(chaineFEN[i] >= '0' && chaineFEN[i] <= '9')
-        {
-            position.cols[i].nb=0;
-            temp[0] = chaineFEN[i];
-            if(chaineFEN[i+1] >= '0' && chaineFEN[i+1] <= '9')
-            {
-                temp[1] = chaineFEN[i+1];
-                temp[2] = '\0';
-                i++;
-            }
-            else
-            {
-                temp[1] = '\0';
-            }
-            stock=atoi(temp);
-
-            for(j=i;j<i+stock-2;j++)
-            {
-                position.cols[j].nb=0;
-                position.cols[j].couleur=0;
-            }
-            j=i+stock;
-        }
-        else
-        {
-            j=(i+stock);
-        }
-        switch(chaineFEN[i])
-        {
-            case 'u':
-                position.cols[j].nb=1;
-                position.cols[j].couleur=JAU;
-                break;
-            case 'd':
-                position.cols[j].nb=2;
-                position.cols[j].couleur=JAU;
-                break;
-            case 't':
-                position.cols[j].nb=3;
-                position.cols[j].couleur=JAU;
-                break;
-            case 'q':
-
-                position.cols[j].nb=4;
-                position.cols[j].couleur=JAU;
-                break;
-            case 'c':
-                position.cols[j].nb=5;
-                position.cols[j].couleur=JAU;
-                break;
-            case 'U':
-                position.cols[j].nb=1;
-                position.cols[j].couleur=ROU;
-                break;
-            case 'D':
-                position.cols[j].nb=2;
-                position.cols[j].couleur=ROU;
-                break;
-            case 'T':
-                position.cols[j].nb=3;
-                position.cols[j].couleur=ROU;
-                break;
-            case 'Q':
-                position.cols[j].nb=4;
-                position.cols[j].couleur=ROU;
-                break;
-            case 'C':
-                position.cols[j].nb=5;
-                position.cols[j].couleur=ROU;
-                break;
-            case 'b':
-                position.evolution.bonusJ=i;
-                break;
-            case 'm':
-                position.evolution.malusJ=i;
-                break;
-            case 'B':
-                position.evolution.bonusR=i;
-                break;
-            case 'M':
-                position.evolution.malusR=i;
-                break;
-            case 'j':
-                position.trait=JAU;
-                break;
-            case 'r':
-                position.trait=ROU;
-                break;
-        }
-    }
-    */
-
-   for(i = 0; i < NBCASES && chaineFEN[i] != '\0'; i++) {
-    switch(chaineFEN[i]) {
-       case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
-        temp[0] = chaineFEN[i];
-        temp[1] = '\0';
-
-        // Check if the next character is also a digit
-        if(chaineFEN[i+1] >= '0' && chaineFEN[i+1] <= '9') 
-        {
-            temp[1] = chaineFEN[i+1];
-            temp[2] = '\0';
-            i++; // Skip the next character as we have already processed it
-        }
-
-    stock = atoi(temp);
-
-    for(int j = 0; j < stock; j++) 
-    {
-        position.cols[i+j].nb = 0;
-        position.cols[i+j].couleur = 0;
-    }
-
-    i += stock - 1;
-    break;
-        case 'u':
-            position.cols[i].nb = 1;
-            position.cols[i].couleur = JAU;
-            break;
-        case 'U':
-            position.cols[i].nb = 1;
-            position.cols[i].couleur = ROU;
-            break;
-        case 'd':
-            position.cols[i].nb = 2;
-            position.cols[i].couleur = JAU;
-            break;
-        case 'D':
-            position.cols[i].nb = 2;
-            position.cols[i].couleur = ROU;
-            break;
-        case 't':
-            position.cols[i].nb = 3;
-            position.cols[i].couleur = JAU;
-            break;
-        case 'T':
-            position.cols[i].nb = 3;
-            position.cols[i].couleur = ROU;
-            break;
-        case 'q':
-            position.cols[i].nb = 4;
-            position.cols[i].couleur = JAU;
-            break;
-        case 'Q':
-            position.cols[i].nb = 4;
-            position.cols[i].couleur = ROU;
-            break;
-        case 'c':
-            position.cols[i].nb = 5;
-            position.cols[i].couleur = JAU;
-            break;
-        case 'C':
-            position.cols[i].nb = 5;
-            position.cols[i].couleur = ROU;
-            break;
-        case 'r':
-            position.trait = ROU;
-            break;
-        case 'j':
-            position.trait = JAU;
-            break;
-    }
-}
-    return position;
-}
-
-
-T_Position lireFEN(char *chaineFEN)
-{
-    int i=0,j=0,stock,save;
-    char intstock[3];
-    T_Position position;
-
-    while(chaineFEN[i]!='\0')
-    {
-        save=j;
-        if(chaineFEN[i]>='0' && chaineFEN[i]<='9')
-        {
-            if(chaineFEN[i+1]>='0' && chaineFEN[i+1]<='9')
-            {
-                intstock[0]=chaineFEN[i];
-                intstock[1]=chaineFEN[i+1];
-                intstock[2]='\0';
-
-                stock=atoi(intstock);
-                for(j=save;j<=stock;j++)
-                {
-                    position.cols[j].nb=0;
-                    position.cols[j].couleur=0;
-                }
-                i=i+2;
-            }
-            else
-            {
-                intstock[0]=chaineFEN[i];
-                intstock[1]='\0';
-                stock=atoi(intstock);
-                for(j=save;j<=stock;j++)
-                {
-                    position.cols[j].nb=0;
-                    position.cols[j].couleur=0;
-                }
-                i++;
-            }
-        }
-        else
-        {
-            switch(chaineFEN[i])
-            {
-                case 'u':
-                    position.cols[j].nb=1;
-                    position.cols[j].couleur=JAU;
-                    break;
-                case 'd':
-                    position.cols[j].nb=2;
-                    position.cols[j].couleur=JAU;
-                    break;
-                case 't':
-                    position.cols[j].nb=3;
-                    position.cols[j].couleur=JAU;
-                    break;
-                case 'q':
-                    position.cols[j].nb=4;
-                    position.cols[j].couleur=JAU;
-                    break;
-                case 'c':
-                    position.cols[j].nb=5;
-                    position.cols[j].couleur=JAU;
-                    break;
-                case 'U':
-                    position.cols[j].nb=1;
-                    position.cols[j].couleur=ROU;
-                    break;
-                case 'D':
-                    position.cols[j].nb=2;
-                    position.cols[j].couleur=ROU;
-                    break;
-                case 'T':
-                    position.cols[j].nb=3;
-                    position.cols[j].couleur=ROU;
-                    break;
-                case 'Q':
-                    position.cols[j].nb=4;
-                    position.cols[j].couleur=ROU;
-                    break;
-                case 'C':
-                    position.cols[j].nb=5;
-                    position.cols[j].couleur=ROU;
-                    break;
-
-                case 'b':
-                    position.evolution.bonusJ=j;
-                    break;
-                
-                case 'm':
-                    position.evolution.malusJ=j;
-                    break;
-                
-                case 'B':
-                    position.evolution.bonusR=j;
-                    break;
-                
-                case 'M':
-                    position.evolution.malusR=j;
-                    break;
-            }
-            j++;
-            i++;
-        }
-    }
-    return position;
 }

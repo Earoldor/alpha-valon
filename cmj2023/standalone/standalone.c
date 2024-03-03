@@ -62,11 +62,15 @@ int main()
     score = evaluerScore(position);      //move evaluation
 
     writeJS(position, score, "../web/refresh-data.json");    //writting of the JSON file of the initial position
+    printf0("_DEBUG_ POSITION EN ECRITURE\n");
 
     printf("\t!--!--!--!--!--!--!--!--! LA PARTIE COMMENCE !--!--!--!--!--!--!--!--!\n\n");
 
+    printf0("_DEBUG_ LA PARTIE COMMENCE\n");
+
     printf("\tC'est au tour du joueur %d de jouer.\n", position.trait);    //showing the player who has to play
     fonctionFen(position);                                               //writting of the FEN format of the position
+    printf0("_DEBUG_ ECRITURE DE LA POSITION :: NON OBLIGATOIRE\n");
 
     /*******************************************************/
     /*Placement of bonus and malus                         */
@@ -80,6 +84,8 @@ int main()
     {
         printf("\n\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre case:");
         scanf("%hhd", &position.evolution.bonusJ);
+
+        printf0("_DEBUG_ BONUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
     }
     writeJS(position, score, "../web/refresh-data.json");
    
@@ -90,6 +96,8 @@ int main()
     {
         printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
         scanf("%hhd", &position.evolution.malusJ);
+
+        printf0("_DEBUG_ MALUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
     }
     writeJS(position, score, "../web/refresh-data.json");
 
@@ -100,6 +108,8 @@ int main()
     {
         printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
         scanf("%hhd", &position.evolution.bonusR);
+
+        printf0("_DEBUG_ BONUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
     writeJS(position, score, "../web/refresh-data.json");
 
@@ -110,9 +120,14 @@ int main()
     {
         printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
         scanf("%hhd", &position.evolution.malusR);
+
+        printf0("_DEBUG_ MALUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
 
     writeJS(position, score, "../web/refresh-data.json");    //writting finals results of placing bonus and malus
+
+    printf0("_DEBUG_ POSITION EN ECRITURE\n");
+
     fonctionFen(position);                                   //writting of the FEN format of the position
   
 
@@ -143,6 +158,7 @@ int main()
                 while (getchar() != '\n'); // emptying the input buffer
             }
 
+            printf0("_DEBUG_ VALIDATION DE L'ECRITURE DU COUP\n");
         } 
         while (result != 1); // repeating until the input is a number
 
@@ -157,9 +173,13 @@ int main()
                 printf("Entrée invalide. Veuillez entrer un nombre.\n");
                 while (getchar() != '\n'); // emptying the input buffer
             }
+
+            printf0("_DEBUG_ VALIDATION DE L'ECRITURE DU COUP\n");
         } 
         while (result != 1); // repeating until the input is a number
         stockage = estValide(position, coup.origine, coup.destination);    //stockage of the validity of the move
+
+        printf0("_DEBUG_ VALIDATION DU COUP STOCKÉE DANS STOCKAGE\n");
 
         /***************************************************/
         /*Checking if a move is valide or not              */
@@ -171,14 +191,20 @@ int main()
             score = evaluerScore(position);                                     //evaluate the score
             printf("\n\t!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!\n\n");
             fonctionFen(position);
+
+            printf0("_DEBUG_ LE COUP EST UN FRANC SUCCÈS\n");
         }
         else                                                                    //if the move is not valid
         {
             printf("\n\t!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!\n\n");
+
+            printf0("_DEBUG_ LE COUP EST UN ECHEC\n");
         }
 
         writeJS(position, score, "../web/refresh-data.json");    //writting of the JSON file of the position after the move
         legaux=getCoupsLegaux(position);                                         //update of the legal moves
+
+        printf0("_DEBUG_ MISE A JOUR DES COUPS LEGAUX\n");
     }
 
     /*******************************************************/
@@ -186,6 +212,8 @@ int main()
     /*******************************************************/
 
     printf("\n\t!--!--!--!--!--!--!--!--! PARTIE TERMINÉE !--!--!--!--!--!--!--!--!\n\n");
+
+    printf0("_DEBUG_ LA PARTIE EST TERMINÉE\n");
 
     /*******************************************************/
     /*Showing the winner or the loser                      */
@@ -210,6 +238,8 @@ int main()
         else
             printf("\n\t!--!--!--!--! ÉGALITÉ !--!--!--!--!");                                //affichage de l'égalité
     }
+
+    printf0("_DEBUG_ AFFICHAGE DU GAGNANT\n");
 
 }
 
