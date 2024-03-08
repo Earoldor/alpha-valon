@@ -68,7 +68,7 @@
  
 var evolution = {bonusJ:false, malusJ:false, bonusR:false, malusR:false}; 
 var position = [];
-var filename="diag_ressources.json"; // les chemins des fichiers sont fournis relativement au répertoire data
+var filename="diag_ressources.js"; // les chemins des fichiers sont fournis relativement au répertoire data
 var couleurs = ["aucun","jaunes","rouges"];
 var colrefs = []; 
 
@@ -293,7 +293,7 @@ $(document).ready(function(){
 
 function getJson(filename) {
 	var scriptElement = document.createElement('script');
-	scriptElement.src = "/data/" + filename + '?cle=' + Math.random();
+	scriptElement.src = "./data/" + filename + '?cle=' + Math.random();
 	document.body.appendChild(scriptElement);
 }
 

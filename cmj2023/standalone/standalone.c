@@ -79,66 +79,72 @@ int main(int argc, char *argv[])
     
     
     //showing the player who has to play
-    if (position.trait==1){   
-        printf("\tC'est au tour du joueur 1 / Jaune de jouer.\n");
+    if (position.trait==1){                                                 //if the player who has to play is the player 1 / Jaune
+        printf("\tC'est au tour du joueur 1 / Jaune de jouer.\n");         //showing the player who has to play
+        printf0("_DEBUG_ AU TOUR DES JAUNES\n");
     }
-     if (position.trait==2){   
-        printf("\tC'est au tour du joueur 2 / Rouge de jouer.\n");
+     if (position.trait==2){                                                //if the player who has to play is the player 2 / Rouge
+        printf("\tC'est au tour du joueur 2 / Rouge de jouer.\n");         //showing the player who has to play
+        printf0("_DEBUG_ AU TOUR DES ROUGES\n");
     }
     //fonctionFen(position);                                               //writting of the FEN format of the position
-    printf0("_DEBUG_ ECRITURE DE LA POSITION :: NON OBLIGATOIRE\n");
+    printf0("_DEBUG_ ECRITURE DE LA POSITION :: NON OBLIGATOIRE\n");       //additionnal debug
 
     /*******************************************************/
     /*Placement of bonus and malus                         */
     /*******************************************************/
 
 
-    printf("\n\tAu tour du joueur 1 / Jaune de donner la position de son bonus :");
+    printf("\n\tAu tour du joueur 1 / Jaune de donner la position de son bonus :"); //asking for the position of the bonus of the player 1 / Jaune
     scanf("%hhd", &(position.evolution.bonusJ));            //entering the position of the bonus of the player 1 / Jaune
 
-    while(position.cols[position.evolution.bonusJ].couleur==ROU)
+    while(position.cols[position.evolution.bonusJ].couleur==ROU)        //if the position of the bonus is occupied by a red piece                                                            
     {
+        fprintf(stderr, "Impossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur\n");
         printf("\n\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre case:");
-        scanf("%hhd", &position.evolution.bonusJ);
+        scanf("%hhd", &position.evolution.bonusJ);                      //asking for the position of the bonus of the player 1 / Jaune
 
         printf0("_DEBUG_ BONUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
     }
-    writeJS(position, score, nomfic);
+    writeJS(position, score, nomfic);                    //writting finals results of placing bonus and malus
    
    
     printf("\n\tAu tour du joueur 2 / Rouge de donner la position de son bonus :");
     scanf("%hhd", &position.evolution.bonusR);            //entering the position of the bonus of the player 2 / Rouge
 
-    while(position.cols[position.evolution.bonusR].couleur!=ROU)
+    while(position.cols[position.evolution.bonusR].couleur!=ROU)        //if the position of the bonus is occupied by a yellow piece
     {
+        fprintf(stderr, "Impossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur\n");
         printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
-        scanf("%hhd", &position.evolution.bonusR);
+        scanf("%hhd", &position.evolution.bonusR);                      //asking for the position of the bonus of the player 2 / Rouge
 
         printf0("_DEBUG_ BONUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
-    writeJS(position, score, nomfic);
+    writeJS(position, score, nomfic);               //writting finals results of placing bonus and malus
 
    
     printf("\n\tAu tour du joueur 1 / Jaune de donner la position de son malus :");
     scanf("%hhd", &position.evolution.malusJ);            //entering the position of the malus of the player 1 / Jaune
 
-    while(position.cols[position.evolution.malusJ].couleur!=JAU || position.evolution.malusJ==position.evolution.bonusJ)
+    while(position.cols[position.evolution.malusJ].couleur!=JAU || position.evolution.malusJ==position.evolution.bonusJ)       //if the position of the malus is occupied by a yellow piece
     {
-        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
-        scanf("%hhd", &position.evolution.malusJ);
+        fprintf(stderr, "Impossible de placer le malus sur une case occupée par un malus ou d'une autre couleur\n");
+        printf("\tImpossible de placer le malus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
+        scanf("%hhd", &position.evolution.malusJ);      //asking for the position of the malus of the player 1 / Jaune
 
         printf0("_DEBUG_ MALUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
     }
-    writeJS(position, score, nomfic);
+    writeJS(position, score, nomfic);        //writting finals results of placing bonus and malus
 
 
     printf("\n\tAu tour du joueur 2 / Rouge de donner la position de son malus :");
     scanf("%hhd", &position.evolution.malusR);            //entering the position of the malus of the player 2 / Rouge
 
-    while(position.cols[position.evolution.malusR].couleur!=ROU || position.evolution.malusR==position.evolution.bonusR)
+    while(position.cols[position.evolution.malusR].couleur!=ROU || position.evolution.malusR==position.evolution.bonusR)      //if the position of the malus is occupied by a red piece
     {
-        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
-        scanf("%hhd", &position.evolution.malusR);
+        fprintf(stderr, "Impossible de placer le malus sur une case occupée par un malus ou d'une autre couleur\n");
+        printf("\tImpossible de placer le malus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
+        scanf("%hhd", &position.evolution.malusR);     //asking for the position of the malus of the player 2 / Rouge
 
         printf0("_DEBUG_ MALUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
@@ -160,11 +166,11 @@ int main(int argc, char *argv[])
         printf("\n\tC'est au tour du joueur ");    //showing the player who has to play
         if (position.trait==1)
         {   
-            printf("1 / Jaune de jouer.\n");
+            printf("1 / Jaune de jouer.\n");        //showing the player who has to play depending on the trait
         }
         else if (position.trait==2)
         {   
-            printf("2 / Rouge de jouer.\n");
+            printf("2 / Rouge de jouer.\n");    //showing the player who has to play depending on the trait
         }
 
         /***************************************************/
@@ -180,7 +186,8 @@ int main(int argc, char *argv[])
 
                 
             if (result != 1)        // if scanf didn't succeed to read a number, empty the input buffer
-            {          
+            {   
+                fprintf(stderr, "La case n'est pas valide.\n"); //showing that the move is not valid
                 printf("Entrée invalide. Veuillez entrer un nombre.\n");
                 while (getchar() != '\n'); // emptying the input buffer
             }
@@ -196,7 +203,8 @@ int main(int argc, char *argv[])
 
                         
             if (result != 1)    // if scanf didn't succeed to read a number, empty the input buffer
-            {
+            {   
+                fprintf(stderr, "La case n'est pas valide.\n"); //showing that the move is not valid
                 printf("Entrée invalide. Veuillez entrer un nombre.\n");
                 while (getchar() != '\n'); // emptying the input buffer
             }
@@ -225,6 +233,7 @@ int main(int argc, char *argv[])
             printf("\n\t!--!--!--!--!--!--!--!--! COUP IMPOSSIBLE !--!--!--!--!--!--!--!--!\n\n");
 
             printf0("_DEBUG_ LE COUP EST UN ECHEC\n");
+            fprintf(stderr, "Le coup n'est pas valide.\n");                      //showing that the move is not valid
         }
 
         writeJS(position, score, nomfic);    //writting of the JSON file of the position after the move
@@ -253,25 +262,25 @@ int main(int argc, char *argv[])
     else if(score.nbJ < score.nbR)                                                          //si le score des jaunes est inférieur au score des rouges
     {
         printf("\n\t!--!--!--!--!--! LE JOUEUR 2 / ROUGE GAGNE !! !--!--!--!--!--!\n");         //affichage de la victoire des rouges
-        afficherScore(score);
+        afficherScore(score);                                                   //affichage du score final
     }
     else                                                                                    //si les scores sont égaux
     {
         if(score.nbJ5 > score.nbR5)
         {
             printf("\n\t!--!--!--!--! LE JOUEUR JAUNE GAGNE GRACE A SES PILES DE 5 !--!--!--!--!");     //on prends en compte le nombre de pile de 5 de chaque joueur pour déterminer la victoire
-            afficherScore(score);
+            afficherScore(score);                                                             //affichage du score final                                        
         }
             
         if(score.nbJ5 < score.nbR5)
         {
-            printf("\n\t!--!--!--!--! LE JOUEUR ROUGE GAGNE GRACE A SES PILES DE 5 !--!--!--!--!");
-            afficherScore(score);
+            printf("\n\t!--!--!--!--! LE JOUEUR ROUGE GAGNE GRACE A SES PILES DE 5 !--!--!--!--!");     //on prends en compte le nombre de pile de 5 de chaque joueur pour déterminer la victoire
+            afficherScore(score);                                                          //affichage du score final                               
         }
         else
         {
             printf("\n\t!--!--!--!--! ÉGALITÉ !--!--!--!--!");                                //affichage de l'égalité
-            afficherScore(score);
+            afficherScore(score);                                       //affichage du score final
         }
     }
 

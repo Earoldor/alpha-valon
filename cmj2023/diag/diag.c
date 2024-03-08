@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
     char *chaineF=argv[2],description[MAXCHAR];                         //chaineF is the FEN string, description is the description of the file
     //char lignes[MAXLIGNE][MAXCHAR];                                     //lignes is a table of characters
-    char desc[MAXCHAR],chemin[MAXNOM]="./web/data/diag_ressources.json",cheminModif[MAXNOM],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
+    char desc[MAXCHAR],chemin[MAXNOM]="../web/data/diag_ressources.js",cheminModif[MAXNOM],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
     int j,longueur,stockage,content=0; //num_lignes=0;                                  //these are some variables for the programm
     octet i,stock=0;                                                //i is a variable for the loop, stock is a variable which surves to stock the number of empty cases
     T_Position position;                                            //position is the position of the game
