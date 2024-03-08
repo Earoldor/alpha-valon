@@ -64,7 +64,7 @@
 var position = [];
 
 
-var filename="../web/data/refresh-data.json"; // les chemins des fichiers sont fournis relativement au répertoire data
+var filename="refresh-data.js"; // les chemins des fichiers sont fournis relativement au répertoire data
 var refreshtime=0.5;
 var couleurs = ["aucun","jaune","rouge"];
 var colrefs = []; 
@@ -190,7 +190,7 @@ function refresh() {
 
 function getJson() {
 	var scriptElement = document.createElement('script');
-	scriptElement.src = "" + filename + '?cle=' + Math.random();
+	scriptElement.src = "./data/" + filename + '?cle=' + Math.random();
 	document.body.appendChild(scriptElement);
 }
 

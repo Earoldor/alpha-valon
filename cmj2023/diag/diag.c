@@ -23,12 +23,14 @@
 #include "../include/topologie.h"   //for the topologie
 #define MAXNOM 100
 #define MAXCHAR 1000
+#define MAXLIGNE 10
+#define MAXCONTENT 10000
 
 /***********************************************************/
 /*Prototype Declaration                                    */
 /***********************************************************/
 
-void fonctionFen(T_Position position);                              //prototype de la fonction d'écriture du format FEN (rajouté par Clément)
+void vider_stdin();
 
 /***********************************************************/
 /*Principal function : main                               */
@@ -40,12 +42,14 @@ int main(int argc, char* argv[])
     /*Variables declaration                                */
     /*******************************************************/    
 
-    char *chaineF=argv[2],*description="";;                         //chaineF is the FEN string, description is the description of the file
-    char desc[MAXCHAR],chemin[MAXNOM]="./web/data/diag_ressources.json";       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
-    int rep,c,j,longueur,stockage;                                  //these are some variables for the programm
+    char *chaineF=argv[2],description[MAXCHAR];                         //chaineF is the FEN string, description is the description of the file
+    //char lignes[MAXLIGNE][MAXCHAR];                                     //lignes is a table of characters
+    char desc[MAXCHAR],chemin[MAXNOM]="./web/data/diag_ressources.json",cheminModif[MAXNOM],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
+    int j,longueur,stockage,content=0; //num_lignes=0;                                  //these are some variables for the programm
     octet i,stock=0;                                                //i is a variable for the loop, stock is a variable which surves to stock the number of empty cases
     T_Position position;                                            //position is the position of the game
     FILE *fic ;                                                     //fic is a file pointer
+    int len,ch;
 
     /*******************************************************/
     /*Programm start                                       */
@@ -67,7 +71,7 @@ int main(int argc, char* argv[])
 
     if(argv[2][longueur-1]!='r' && argv[2][longueur-1]!='j')        //if the last character of the string argv[2] is not 'r' or 'j'
     {
-        printf("!--!--!--!--!--! ERREUR CRITIQUE : LE TRAIT N'EST PAS RENSEIGNÉ !--!--!--!--!--!\n");  
+        fprintf(stderr,"!--!--!--!--!--! ERREUR CRITIQUE : LE TRAIT N'EST PAS RENSEIGNÉ !--!--!--!--!--!\n");  
 
         printf0("_DEBUG_ PAS DE TRAIT -> ARRET\n");
 
@@ -82,25 +86,56 @@ int main(int argc, char* argv[])
     printf0("_DEBUG_ TRAIT -> ROUGE OU JAUNE\n");
 
     /*******************************************************/
-    /*Asking of the description of the file                */
+    /*Asking of the file path                              */
     /*******************************************************/
 
-    //FILE *ficdesc;                                                 //we declare a file pointer                               
+    printf0("récupération de la redirection\n");   
+    fgets(description, MAXCHAR, stdin);
 
-    //ficdesc=fopen("description.txt","r");                          //we open the file description.txt in read mode
-    //fread(description,1,MAXCHAR,ficdesc);                          //we read the file description.txt which contains the description of the file
-    //fclose(ficdesc);                                               //we close the file description.txt      
+    // Ignore the rest of the input until the next newline
+  
+    while ((ch = getchar()) != '\n' && ch != EOF) { printf("ch = %c\n", ch);}            
+
+    printf("CA PASSE DEDANS PTN\n");
+    printf("!--!--!--!--!--! VOULEZ-VOUS CHANGER LE NOM DU FICHIER ??? !--!--!--!--!--!\n");
+
+  
+    fgets(cheminModif,MAXNOM,stdin);                                      //we ask to the user if he wants to change the path of the file
+    getchar();
+    
+    printf("CA PASSE DEDANS LA AUSSI BOUUUUUUUUUH\n");
+    if(strcmp(cheminModif,"\n")!=0)
+    {
+        strtok(cheminModif,"\n");
+        strcpy(chemin,cheminModif);
+    }
+    printf("\n!--!--!--!--!--! CHEMIN DU FICHIER : %s !--!--!--!--!--!\n",chemin);
+
+    printf0("_DEBUG_ RECUPERATION DU CHEMIN D'ACCES DU FICHIER\n");
+
+
+    /*******************************************************/
+    /*Asking of the description of the file                */
+    /*******************************************************/
 
     printf0("_DEBUG_ RECUPERATION DESCRIPTION ENTRÉE PAR REDIRECTION\n");
 
     printf("!--!--!--!--!--! VEUILLEZ ENTREZ UNE DESCRIPTION POUR LE DIAGRAMME !--!--!--!--!--!\n");
 
-    fgets(desc, MAXCHAR, stdin);                                    //we ask to the user to enter the description of the file
-    strtok(desc, "\n");                                             //we remove the '\n' character at the end of the string because fgets() keeps it
-    
-    if(strcmp(desc,"")==0)                                          //if the description is empty
-        printf("!--!--!--!--!--! DESCRIPTION NON RENSEIGNÉE !--!--!--!--!--!\n");
+    strcpy(desc,"");
 
+    while(fgets(temp,sizeof(temp),stdin))
+    {
+        strcat(desc,temp);
+    }
+    //run 1 'tBbdtBMUDmU42 r'
+    desc[strlen(desc)-1]='\0';
+
+    if(strcmp(desc,"\n")==0 || strcmp(desc,"")==0)                                          //if the description is empty
+    {
+        strcpy(desc,"");
+        printf("!--!--!--!--!--! DESCRIPTION NON RENSEIGNÉE !--!--!--!--!--!\n");
+    }
     printf0("_DEBUG_ RECUPERATION DESCRIPTION ENTRÉE PAR CLAVIER\n");
 
     /*******************************************************/
@@ -122,25 +157,6 @@ int main(int argc, char* argv[])
 
     printf0("_DEBUG_ AFFICHAGE DES CARACTERISTIQUES DU FICHIER\n");
 
-    /*******************************************************/
-    /*Asking of the file path                              */
-    /*******************************************************/
-
-
-    printf("!--!--!--!--!--! VOULEZ-VOUS CHANGER LE CHEMIN D'ACCES DU FICHIER ??? 1 POUR OUI, 0 POUR NON !--!--!--!--!--!\n");
-    scanf("%d",&rep);                                                //we ask to the user if he wants to change the path of the file
-    
-    if(rep == 1)                                                    //if the user wants to change the path of the file
-    {
-        printf("!--!--!--!--!--! VEUILLEZ RENSEIGNER LE NOUVEAU CHEMIN D'ACCES !--!--!--!--!--!\n");
-
-        while ((c = getchar()) != '\n' && c != EOF) { }             //we clear the buffer
-
-        fgets(chemin, MAXNOM, stdin);                               //we ask to the user to enter the new path of the file
-        strtok(chemin, "\n");                                       //we remove the '\n' character at the end of the string because fgets() keeps it
-    }
-
-    printf0("_DEBUG_ RECUPERATION DU CHEMIN D'ACCES DU FICHIER\n");
 
     /*******************************************************/
     /*Writting of the JSON File                            */
@@ -277,134 +293,7 @@ int main(int argc, char* argv[])
 
 }
 
-/***********************************************************/
-/*Writing function of position to FEN                      */
-/***********************************************************/
-
-void fonctionFen(T_Position position)
-{
-    char chaine[100];
-    int i,j=0,stock=0;
-    char nbvide[1000000];
-
-    for(i=0;i< NBCASES;i++)
-    {
-        if(position.cols[i].nb==0)
-        {
-            stock++;
-            if(i==position.evolution.bonusJ || i==position.evolution.malusJ || i==position.evolution.bonusR || i==position.evolution.malusR)
-            {
-               stock=0;
-            }
-
-            while(i + 1 < NBCASES && position.cols[i + 1].nb == 0)
-            {
-            stock++;
-            i++;
-            }
-
-            snprintf(nbvide, sizeof(nbvide), "%d", stock);
-            strcat(chaine, nbvide);
-            j += strlen(nbvide);
-            stock = 0;         
-        }
-
-        switch(position.cols[i].nb)
-        {
-            case 1:
-                if(position.cols[i].couleur==JAU)
-                {
-                    chaine[j]='u';
-                    j++;
-                }
-                else
-                {
-                    chaine[j]='U';
-                    j++;
-                }
-                break;
-            case 2:
-                if(position.cols[i].couleur==JAU)
-                {
-                    chaine[j]='d';
-                    j++;
-                }
-                else
-                {
-                    chaine[j]='D';
-                    j++;
-                }
-                break;
-            case 3:
-                if(position.cols[i].couleur==JAU)
-                {
-                    chaine[j]='t';
-                    j++;
-                }
-                else
-                {
-                    chaine[j]='T';
-                    j++;
-                }
-                break;
-            case 4:
-                if(position.cols[i].couleur==JAU)
-                {
-                    chaine[j]='q';
-                    j++;
-                }
-                else
-                {
-                    chaine[j]='Q';
-                    j++;
-                }
-                break;
-            case 5:
-                if(position.cols[i].couleur==JAU)
-                {
-                    chaine[j]='c';
-                    j++;
-                }
-                else
-                {
-                    chaine[j]='C';
-                    j++;
-                }
-                break;
-        }
-        if(i==position.evolution.bonusJ)
-        {
-            chaine[j] = 'b';
-            j++;
-        }
-        if(i==position.evolution.malusJ)
-        {
-            chaine[j] = 'm';
-            j++;
-        }
-        if(i==position.evolution.bonusR)
-        {
-            chaine[j] = 'B';
-            j++;
-        }
-        if(i==position.evolution.malusR)
-        {
-            chaine[j] = 'M';
-            j++;
-        }
-    }
-
-    chaine[j]=' ';
-    if(position.trait==JAU)
-    {
-        chaine[j+1]='j';
-    }
-    else
-    {
-        chaine[j+1]='r';
-    }
-    chaine[j+2]='\0';
-
-    
-    printf("%s\n",chaine);
+void vider_stdin() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }

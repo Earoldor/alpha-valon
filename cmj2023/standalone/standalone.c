@@ -22,6 +22,8 @@
 #include "../include/avalam.h"      //for games functions
 #include "../include/topologie.h"   //for the topologie of the game
 
+#define MAXPATH 100
+
 /***********************************************************/
 /*Prototype Declaration                                    */
 /***********************************************************/
@@ -33,8 +35,9 @@ void fonctionFen(T_Position pos);                              //prototype of th
 /*Principal function : main                               */
 /***********************************************************/
 
-int main()
+int main(int argc, char *argv[])
 {
+        
     /*******************************************************/
     /*Variables declaration                                */
     /*******************************************************/
@@ -45,14 +48,18 @@ int main()
     T_ListeCoups legaux;    //legal moves declaration
     octet stockage;         //octet declaration for the storage of the validity of a move
     int result;             //int declaration for the storage of the result of the scanf
-
+    char nomfic[200];
+    char defaultPath[MAXPATH]="../web/data/refresh-data.js";
     /*******************************************************/
     /*Initialization and starting of the game              */
     /*******************************************************/
+    
+    if(argc != 2)
+        strcpy(nomfic, defaultPath);
+    else
+        strcpy(nomfic, argv[1]);
 
-
-
-    printf("\t!--!--!--!--!--!--!--!--! JOUONS À AVALAM !--!--!--!--!--!--!--!--!\n\n");
+    printf("\t!--!--!--!--!--!--!--!--! JOUONS À AVALAM !--!--!--!--!--!--!--!--!\n");
 
     printf0("_DEBUG_ RECUPERATION DE LA POSITION INITIALE\n");
     position = getPositionInitiale();    //position initialization
@@ -61,14 +68,23 @@ int main()
     printf0("_DEBUG_ EVALUATION DU SCORE\n");
     score = evaluerScore(position);      //move evaluation
 
-    writeJS(position, score, "../web/refresh-data.json");    //writting of the JSON file of the initial position
+    printf("\tLe fichier json écrit est le suivant : %s\n", nomfic);
+
+    writeJS(position, score, nomfic);    //writting of the JSON file of the initial position
     printf0("_DEBUG_ POSITION EN ECRITURE\n");
 
     printf("\t!--!--!--!--!--!--!--!--! LA PARTIE COMMENCE !--!--!--!--!--!--!--!--!\n\n");
 
     printf0("_DEBUG_ LA PARTIE COMMENCE\n");
-
-    printf("\tC'est au tour du joueur %d de jouer.\n", position.trait);    //showing the player who has to play
+    
+    
+    //showing the player who has to play
+    if (position.trait==1){   
+        printf("\tC'est au tour du joueur 1 / Jaune de jouer.\n");
+    }
+     if (position.trait==2){   
+        printf("\tC'est au tour du joueur 2 / Rouge de jouer.\n");
+    }
     //fonctionFen(position);                                               //writting of the FEN format of the position
     printf0("_DEBUG_ ECRITURE DE LA POSITION :: NON OBLIGATOIRE\n");
 
@@ -77,8 +93,8 @@ int main()
     /*******************************************************/
 
 
-    printf("\n\tAu tour du joueur 1 de donner la position de son bonus :");
-    scanf("%hhd", &(position.evolution.bonusJ));            //entering the position of the bonus of the player 1
+    printf("\n\tAu tour du joueur 1 / Jaune de donner la position de son bonus :");
+    scanf("%hhd", &(position.evolution.bonusJ));            //entering the position of the bonus of the player 1 / Jaune
 
     while(position.cols[position.evolution.bonusJ].couleur==ROU)
     {
@@ -87,22 +103,11 @@ int main()
 
         printf0("_DEBUG_ BONUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
     }
-    writeJS(position, score, "../web/refresh-data.json");
+    writeJS(position, score, nomfic);
    
-    printf("\n\tAu tour du joueur 1 de donner la position de son malus :");
-    scanf("%hhd", &position.evolution.malusJ);            //entering the position of the malus of the player 1
-
-    while(position.cols[position.evolution.malusJ].couleur!=JAU || position.evolution.malusJ==position.evolution.bonusJ)
-    {
-        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
-        scanf("%hhd", &position.evolution.malusJ);
-
-        printf0("_DEBUG_ MALUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
-    }
-    writeJS(position, score, "../web/refresh-data.json");
-
-    printf("\n\tAu tour du joueur 2 de donner la position de son bonus :");
-    scanf("%hhd", &position.evolution.bonusR);            //entering the position of the bonus of the player 2
+   
+    printf("\n\tAu tour du joueur 2 / Rouge de donner la position de son bonus :");
+    scanf("%hhd", &position.evolution.bonusR);            //entering the position of the bonus of the player 2 / Rouge
 
     while(position.cols[position.evolution.bonusR].couleur!=ROU)
     {
@@ -111,10 +116,24 @@ int main()
 
         printf0("_DEBUG_ BONUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
-    writeJS(position, score, "../web/refresh-data.json");
+    writeJS(position, score, nomfic);
 
-    printf("\n\tAu tour du joueur 2 de donner la position de son malus :");
-    scanf("%hhd", &position.evolution.malusR);            //entering the position of the malus of the player 2
+   
+    printf("\n\tAu tour du joueur 1 / Jaune de donner la position de son malus :");
+    scanf("%hhd", &position.evolution.malusJ);            //entering the position of the malus of the player 1 / Jaune
+
+    while(position.cols[position.evolution.malusJ].couleur!=JAU || position.evolution.malusJ==position.evolution.bonusJ)
+    {
+        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
+        scanf("%hhd", &position.evolution.malusJ);
+
+        printf0("_DEBUG_ MALUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
+    }
+    writeJS(position, score, nomfic);
+
+
+    printf("\n\tAu tour du joueur 2 / Rouge de donner la position de son malus :");
+    scanf("%hhd", &position.evolution.malusR);            //entering the position of the malus of the player 2 / Rouge
 
     while(position.cols[position.evolution.malusR].couleur!=ROU || position.evolution.malusR==position.evolution.bonusR)
     {
@@ -124,7 +143,7 @@ int main()
         printf0("_DEBUG_ MALUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
 
-    writeJS(position, score, "../web/refresh-data.json");    //writting finals results of placing bonus and malus
+    writeJS(position, score,nomfic);    //writting finals results of placing bonus and malus
 
     printf0("_DEBUG_ POSITION EN ECRITURE\n");
 
@@ -136,9 +155,17 @@ int main()
     /*First function while which will serve for looping    */
     /*******************************************************/
 
-    while(legaux.nb != 0 || coup.origine>99 || coup.destination>99 || coup.origine<0 || coup.destination<0)
+    while(legaux.nb != 0 || coup.origine>48 || coup.destination>48 || coup.origine<0 || coup.destination<0)
     {
-        printf("\n\tC'est au tour du joueur %d de jouer.\n", position.trait);    //showing the player who has to play
+        printf("\n\tC'est au tour du joueur ");    //showing the player who has to play
+        if (position.trait==1)
+        {   
+            printf("1 / Jaune de jouer.\n");
+        }
+        else if (position.trait==2)
+        {   
+            printf("2 / Rouge de jouer.\n");
+        }
 
         /***************************************************/
         /*Système de coups                                 */
@@ -190,7 +217,6 @@ int main()
             position = jouerCoup(position, coup.origine, coup.destination);     //play the move
             score = evaluerScore(position);                                     //evaluate the score
             printf("\n\t!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!\n\n");
-            fonctionFen(position);
 
             printf0("_DEBUG_ LE COUP EST UN FRANC SUCCÈS\n");
         }
@@ -201,7 +227,7 @@ int main()
             printf0("_DEBUG_ LE COUP EST UN ECHEC\n");
         }
 
-        writeJS(position, score, "../web/refresh-data.json");    //writting of the JSON file of the position after the move
+        writeJS(position, score, nomfic);    //writting of the JSON file of the position after the move
         legaux=getCoupsLegaux(position);                                         //update of the legal moves
 
         printf0("_DEBUG_ MISE A JOUR DES COUPS LEGAUX\n");
@@ -221,22 +247,32 @@ int main()
 
     if(score.nbJ > score.nbR)                                                               //si le score des jaunes est supérieur au score des rouges
     {
-        printf("\n\t!--!--!--!--!--! LE JOUEUR JAUNE GAGNE !! !--!--!--!--!--!\n");         //affichage de la victoire des jaunes
+        printf("\n\t!--!--!--!--!--! LE JOUEUR 1 / JAUNE GAGNE !! !--!--!--!--!--!\n");         //affichage de la victoire des jaunes
+        afficherScore(score);                                                                //affichage du score final
     }
     else if(score.nbJ < score.nbR)                                                          //si le score des jaunes est inférieur au score des rouges
     {
-        printf("\n\t!--!--!--!--!--! LE JOUEUR ROUGE GAGNE !! !--!--!--!--!--!\n");         //affichage de la victoire des rouges
+        printf("\n\t!--!--!--!--!--! LE JOUEUR 2 / ROUGE GAGNE !! !--!--!--!--!--!\n");         //affichage de la victoire des rouges
+        afficherScore(score);
     }
     else                                                                                    //si les scores sont égaux
     {
         if(score.nbJ5 > score.nbR5)
+        {
             printf("\n\t!--!--!--!--! LE JOUEUR JAUNE GAGNE GRACE A SES PILES DE 5 !--!--!--!--!");     //on prends en compte le nombre de pile de 5 de chaque joueur pour déterminer la victoire
+            afficherScore(score);
+        }
             
         if(score.nbJ5 < score.nbR5)
+        {
             printf("\n\t!--!--!--!--! LE JOUEUR ROUGE GAGNE GRACE A SES PILES DE 5 !--!--!--!--!");
-            
+            afficherScore(score);
+        }
         else
+        {
             printf("\n\t!--!--!--!--! ÉGALITÉ !--!--!--!--!");                                //affichage de l'égalité
+            afficherScore(score);
+        }
     }
 
     printf0("_DEBUG_ AFFICHAGE DU GAGNANT\n");
@@ -251,9 +287,9 @@ void writeJS(T_Position position, T_Score score, char chaine_JS[])
 {
 
     FILE *fic ;
-    char path[1000],defaultPath[1000]="../web/data/refresh-data.json";
+    //char path[1000],defaultPath[1000]="../web/data/refresh-data.json";
 
-    fic = fopen(defaultPath, "w");
+    fic = fopen(chaine_JS, "w");
 
     if(fic == NULL)
     {
