@@ -28,7 +28,7 @@
 ou  -> make
 
 => Pour exécuter, suivre la commande suivante depuis le répertoire /cmj2023/build/ :
-    LIBRAIRIE DYNAMIQUE : Exécuter dyn.sh situé dans le répertoire cmj2023/build/ puis après la commande ci-dessous : 
+    LIBRAIRIE DYNAMIQUE : Exécuter 'source dyn.sh' situé dans le répertoire cmj2023/build/ puis après la commande ci-dessous : 
                         -> ./standalone.exe <precisez ici si chemin à un fichier vous disposez>
 
     LIBRAIRIE STATIQUE : Exécuter la commande ci-dessous :
