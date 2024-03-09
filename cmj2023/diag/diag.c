@@ -25,6 +25,7 @@
 #define MAXCHAR 1000
 #define MAXLIGNE 10
 #define MAXCONTENT 10000
+#define COMPENSATION 20
 
 /***********************************************************/
 /*Prototype Declaration                                    */
@@ -45,11 +46,18 @@ int main(int argc, char* argv[])
     char *chaineF=argv[2],description[MAXCHAR];                         //chaineF is the FEN string, description is the description of the file
     //char lignes[MAXLIGNE][MAXCHAR];                                     //lignes is a table of characters
     char desc[MAXCHAR],chemin[MAXNOM]="../web/data/diag_ressources.js",cheminModif[MAXNOM],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
-    int j,longueur,stockage,content=0; //num_lignes=0;                                  //these are some variables for the programm
+    int j,longueur,stockage=0,content=0; //num_lignes=0;                                  //these are some variables for the programm
     octet i,stock=0;                                                //i is a variable for the loop, stock is a variable which surves to stock the number of empty cases
     T_Position position;                                            //position is the position of the game
     FILE *fic ;                                                     //fic is a file pointer
     int len,ch;
+    int drap=0,posGen=0,maxBonusMalus=1;
+    int bonusJDrap=0,bonusRDrap=0,malusJDrap=0,malusRDrap=0;
+    int stockJB=255,stockRB=255,stockJM=255,stockRM=255;
+    int stockB=0,stockM=0,stockb=0,stockm=0;
+    int posDecal=0;
+    int comptage=0;
+    char transform[3];
 
     /*******************************************************/
     /*Programm start                                       */
@@ -89,21 +97,21 @@ int main(int argc, char* argv[])
     /*Asking of the file path                              */
     /*******************************************************/
 
-    printf0("récupération de la redirection\n");   
+    /*printf0("récupération de la redirection\n");   
     fgets(description, MAXCHAR, stdin);
 
     // Ignore the rest of the input until the next newline
   
     while ((ch = getchar()) != '\n' && ch != EOF) { printf("ch = %c\n", ch);}            
 
-    printf("CA PASSE DEDANS PTN\n");
+    printf("CA PASSE DEDANS PTN\n"); */
     printf("!--!--!--!--!--! VOULEZ-VOUS CHANGER LE NOM DU FICHIER ??? !--!--!--!--!--!\n");
 
   
     fgets(cheminModif,MAXNOM,stdin);                                      //we ask to the user if he wants to change the path of the file
-    getchar();
+    //getchar();
     
-    printf("CA PASSE DEDANS LA AUSSI BOUUUUUUUUUH\n");
+    //printf("CA PASSE DEDANS LA AUSSI BOUUUUUUUUUH\n");
     if(strcmp(cheminModif,"\n")!=0)
     {
         strtok(cheminModif,"\n");
@@ -179,30 +187,49 @@ int main(int argc, char* argv[])
 
     i=0,j=0;                                                        //we initialize the variables i and j
 
-    while(i<NBCASES+1)                                              //while i is less than the number of cases
+    for(i=0;i<48;i++)
+    {
+        position.cols[i].nb=0;
+        position.cols[i].couleur=0;
+    }
+    i=0,j=0;
+    while(comptage!=NBCASES)                                              //while i is less than the number of cases
     {
         if(stock>0)                                                 //if stock is positive
         {
-            if(i!=NBCASES && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                      //if i is different from the number of cases and the character is different from 'B', 'b', 'M' and 'm'
+            if(comptage!=NBCASES/*&& chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m'*/)                      //if i is different from the number of cases and the character is different from 'B', 'b', 'M' and 'm'
+            {
                 fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);   //we write the number and the color of the case set to 0 with ','
-            else if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                              //else
+                comptage++;
+            }
+            else //if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                              //else
+            {
                 fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);    //we write the number and the color of the case set to 0 without ','
-
+                comptage++;
+            }
             stock--;                                                //we decrement stock
+            printf0("--\n");
         }
         else if (chaineF[j]>='0' && chaineF[j]<='9')                //if the character is a number
         {
             if(chaineF[j+1]>='0' && chaineF[j+1]<='9')              //and if the next character is a number
             {
                 stock = (chaineF[j+1]-'0')+10*(chaineF[j]-'0');     //we stock the number in stock
+                transform[0]=chaineF[j];
+                transform[1]=chaineF[j+1];
+                transform[2]='\0';
                 j++;                                                //we increment j
             }
             else                                                    //else                              
             {
                 stock = (chaineF[j]-'0');                           //we stock the number in stock
+                transform[0]=chaineF[j];
+                transform[1]='\0';
             }
 
-            stockage=stock;                                         //we stock the value of stock in stockage
+            stockage=stockage+stock;                                         //we stock the value of stock in stockage
+            posDecal=posDecal+atoi(transform);                               //we stock the value of transform in posDecal
+            printf1("%d posdecale\n",posDecal);
         }
         
         else                                                        //if the character is not a number
@@ -212,77 +239,291 @@ int main(int argc, char* argv[])
             case 'u':
                 position.cols[i].nb = 1;
                 position.cols[i].couleur = JAU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'U':
                 position.cols[i].nb = 1;
                 position.cols[i].couleur = ROU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'd':
                 position.cols[i].nb = 2;
                 position.cols[i].couleur = JAU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'D':
                 position.cols[i].nb = 2;
                 position.cols[i].couleur = ROU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 't':
                 position.cols[i].nb = 3;
                 position.cols[i].couleur = JAU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'T':
                 position.cols[i].nb = 3;
                 position.cols[i].couleur = ROU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'q':
                 position.cols[i].nb = 4;
                 position.cols[i].couleur = JAU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'Q':
                 position.cols[i].nb = 4;
                 position.cols[i].couleur = ROU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'c':
                 position.cols[i].nb = 5;
                 position.cols[i].couleur = JAU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'C':
                 position.cols[i].nb = 5;
                 position.cols[i].couleur = ROU;
+
+                if(drap==1)
+                {
+                    posGen++;
+                    drap=0;
+                }
+                if(chaineF[j+1]=='B' || chaineF[j+1]=='b' || chaineF[j+1]=='M' || chaineF[j+1]=='m')
+                    posGen++;
+                else
+                    drap=1;
+
                 break;
             case 'B':
-                position.evolution.bonusR = i-stockage;              //we stock the value of i-stockage in the bonusR
+                stockB++;
+                printf1("%d DINST\n",stockB);
+                printf1("%d DECALAGE\n",stockage);
+                printf1("%d POSDECALE\n",posDecal);
+                if(bonusRDrap<maxBonusMalus)
+                {
+                    if(stockB==1)
+                    {
+                        if(stockage!=0)
+                        {
+                            position.evolution.bonusR = posGen + posDecal;              //we stock the value of i-stockage in the bonusR
+                            stockRB = position.evolution.bonusR-1;
+                            printf1("%d :",position.evolution.bonusR);    //writing of the bonus of the red player
+                            printf1("%d",stockRB);
+                        }
+                        else
+                        {
+                            position.evolution.bonusR = posGen;              //we stock the value of i-stockage in the bonusR
+                            stockRB = position.evolution.bonusR-1;
+                            printf1("%d :",position.evolution.bonusR);    //writing of the bonus of the red player
+                            printf1("%d",stockRB);
+                        }
+                    }
+                    else
+                        break;
+                }   
                 break;
             case 'b':
-                position.evolution.bonusJ = 0;                      
-                position.evolution.bonusJ = i-stockage;             //we stock the value of i-stockage in the bonusJ
+                stockb++;
+                printf1("%d DECALAGE\n",stockage);
+                printf1("%d POSDECALE\n",posDecal);
+                if(bonusJDrap<maxBonusMalus)
+                {
+                    if(stockb==1)
+                    {
+                        if(stockage!=0)
+                        {
+                            position.evolution.bonusJ = posGen + posDecal;              //we stock the value of i-stockage in the bonusR
+                            stockJB = position.evolution.bonusJ-1;
+                            printf1("%d :",position.evolution.bonusJ);    //writing of the bonus of the red player
+                            printf1("%d",stockJB);
+                        }
+                        else
+                        {
+                            position.evolution.bonusJ = posGen;              //we stock the value of i-stockage in the bonusR
+                            stockJB = position.evolution.bonusJ-1;
+                            printf1("%d :",position.evolution.bonusJ);    //writing of the bonus of the red player
+                            printf1("%d",stockJB);
+                        }
+                    }
+                    else
+                        break;
+                }             
                 break;
             case 'M':
-                position.evolution.malusR = i-stockage;             //we stock the value of i-stockage in the malusR
+                stockM++;
+                printf1("%d DECALAGE\n",stockage);
+                printf1("%d POSDECALE\n",posDecal);
+                if(malusRDrap<maxBonusMalus)
+                {
+                    if(stockM==1)
+                    {
+                        if(stockage != 0)
+                        {
+                            position.evolution.malusR = posGen + posDecal;              //we stock the value of i-stockage in the malusR
+                            stockRM = position.evolution.malusR-1;
+                            printf1("%d :",position.evolution.malusR);    //writing of the bonus of the red player
+                            printf1("%d",stockRM);
+                        }
+                        else
+                        {
+                            position.evolution.malusR = posGen;              //we stock the value of i-stockage in the malusR
+                            stockRM = position.evolution.malusR-1;
+                            printf1("%d :",position.evolution.malusR);    //writing of the bonus of the red player
+                            printf1("%d",stockRM);
+                        }
+                    }
+                    else
+                        break;
+                }
                 break;  
             case 'm':
-                position.evolution.malusJ = 0;
-                position.evolution.malusJ = i-stockage;             //we stock the value of i-stockage in the malusJ
+
+                stockm++;
+                printf1("%d DECALAGE\n",stockage);
+                printf1("%d POSDECALE\n",posDecal);
+                if(malusJDrap<maxBonusMalus)
+                {
+                    if(stockm==1)
+                    {
+                        if(stockage != 0)
+                        {
+                            position.evolution.malusJ = posGen + posDecal;              //we stock the value of i-stockage in the malusJ
+                            stockJM = position.evolution.malusJ-1;
+                            printf1("%d :",position.evolution.malusJ);    //writing of the bonus of the red player
+                            printf1("%d",stockJM);
+                        }
+                        else
+                        {
+                            position.evolution.malusJ = posGen;              //we stock the value of i-stockage in the malusJ
+                            stockJM = position.evolution.malusJ-1;
+                            printf1("%d :",position.evolution.malusJ);    //writing of the bonus of the red player
+                            printf1("%d",stockJM);
+                        }
+                    }
+                    else
+                        break;
+                }
                 break;
         }
-
-        if(i!=NBCASES && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                      
+        
+        if(i!=NBCASES && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
+        {                     
             fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);           //we write the number and the color of the case with ','
+            comptage++;
+        } 
         else if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
+        {   
             fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);            //we write the number and the color of the case without ','
+            comptage++;
+        }
     }
 
     i++;                                                            //we increment i
-
     if(stock==0)                                                    //if stock is equal to 0
         j++;                                                        //we increment j
 
+
     }
+    
 
     fprintf(fic,"],\n");
-    fprintf(fic, "%s:%d,\n",STR_BONUS_J, position.evolution.bonusJ);    //writing of the bonus of the yellow player
-    fprintf(fic, "%s:%d,\n",STR_MALUS_J, position.evolution.malusJ);    //writing of the malus of the yellow player
-    fprintf(fic, "%s:%d,\n",STR_BONUS_R, position.evolution.bonusR);    //writing of the bonus of the red player
-    fprintf(fic, "%s:%d,\n",STR_MALUS_R, position.evolution.malusR);    //writing of the malus of the red player
+    fprintf(fic, "%s:\"%s\",\n", STR_FEN, chaineF);                     //we write the FEN string
+    fprintf(fic, "%s:%d,\n",STR_BONUS_J, stockJB);    //writing of the bonus of the yellow player
+    fprintf(fic, "%s:%d,\n",STR_MALUS_J, stockJM);    //writing of the malus of the yellow player
+    fprintf(fic, "%s:%d,\n",STR_BONUS_R, stockRB);    //writing of the bonus of the red player
+    fprintf(fic, "%s:%d,\n",STR_MALUS_R, stockRM);    //writing of the malus of the red player
     fprintf(fic,"});");
     fclose(fic);
     
@@ -292,8 +533,4 @@ int main(int argc, char* argv[])
     return 0;
 
 }
-
-void vider_stdin() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
+//'tBbdtBMUDmU42 r'

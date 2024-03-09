@@ -1,6 +1,6 @@
 traiterJson({
 "numDiag":1,
-"notes":"",
+"notes":"desc",
 "trait":2,
 "cols":[
 	{"nb":3, "couleur":1},
@@ -45,10 +45,16 @@ traiterJson({
 	{"nb":0, "couleur":0},
 	{"nb":0, "couleur":0},
 	{"nb":0, "couleur":0},
-	{"nb":0, "couleur":0}
+	{"nb":0, "couleur":0},
+	{"nb":0, "couleur":0},
+	{"nb":0, "couleur":0},
+	{"nb":0, "couleur":0},
+	{"nb":0, "couleur":0},
+	{"nb":0, "couleur":0},
 ],
+"fen":"tBbdtBMUDmU42 r",
 "bonusJ":0,
-"malusJ":0,
-"bonusR":187,
-"malusR":188,
+"malusJ":4,
+"bonusR":0,
+"malusR":2,
 });
