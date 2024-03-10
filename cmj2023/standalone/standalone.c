@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     octet stockage;         //octet declaration for the storage of the validity of a move
     int result;             //int declaration for the storage of the result of the scanf
     char nomfic[200];
-    char defaultPath[MAXPATH]="../web/data/refresh-data.js";
+    char defaultPath[MAXPATH]="./web/data/refresh-data.js";
     /*******************************************************/
     /*Initialization and starting of the game              */
     /*******************************************************/
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
             position = jouerCoup(position, coup.origine, coup.destination);     //play the move
             score = evaluerScore(position);                                     //evaluate the score
             printf("\n\t!--!--!--!--!--!--!--!--! COUP JOUÉ AVEC SUCCÈS !--!--!--!--!--!--!--!--!\n\n");
-
+            //fonctionFen(position);                                             //writting of the FEN format of the position
             printf0("_DEBUG_ LE COUP EST UN FRANC SUCCÈS\n");
         }
         else                                                                    //if the move is not valid

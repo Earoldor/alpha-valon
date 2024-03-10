@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 
     char *chaineF=argv[2],description[MAXCHAR];                         //chaineF is the FEN string, description is the description of the file
     //char lignes[MAXLIGNE][MAXCHAR];                                     //lignes is a table of characters
-    char desc[MAXCHAR],chemin[MAXNOM]="../web/data/diag_ressources.js",cheminModif[MAXNOM],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
+    char desc[MAXCHAR],chemin[MAXNOM]="./web/data/diag_ressources.js",cheminModif[MAXNOM],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
     int j,longueur,stockage=0,content=0; //num_lignes=0;                                  //these are some variables for the programm
     octet i,stock=0;                                                //i is a variable for the loop, stock is a variable which surves to stock the number of empty cases
     T_Position position;                                            //position is the position of the game
@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
     int posDecal=0;
     int comptage=0;
     char transform[3];
+    int incremter_i=1;
 
     /*******************************************************/
     /*Programm start                                       */
@@ -124,6 +125,7 @@ int main(int argc, char* argv[])
 
     while(fgets(temp,sizeof(temp),stdin))
     {
+        strtok(temp,"\n");
         strcat(desc,temp);
     }
  
@@ -147,7 +149,7 @@ int main(int argc, char* argv[])
     printf("!--! CHAINE FEN : %s !--!\n",chaineF);                  //we display the FEN string
     
     if(strcmp(desc,"")==0)                                          //if the description is empty
-        printf("!--! DESCRIPTION : %s !--!\n",description);         //we display the description enters via a redirection
+        printf("!--! DESCRIPTIUuUuUuuUubUuUUuUuUuUuUuUBuuUuUuUuUuUumUUuUuUuuUMuUuU jON : %s !--!\n",description);         //we display the description enters via a redirection
     else                                                            //else
         printf("!--! DESCRIPTION : %s !--!\n",desc);                //we display the description enters via the keyboard
     
@@ -177,31 +179,28 @@ int main(int argc, char* argv[])
 
     i=0,j=0;                                                        //we initialize the variables i and j
 
-    /*for(i=0;i<48;i++)
-    {
-        position.cols[i].nb=0;
-        position.cols[i].couleur=0;
-    }*/
-    i=0,j=0;
     while(comptage!=NBCASES)                                              //while i is less than the number of cases
     {
         if(stock>0)                                                 //if stock is positive
-        {
-            if(comptage!=NBCASES/*&& chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m'*/)                      //if i is different from the number of cases and the character is different from 'B', 'b', 'M' and 'm'
+        {   
+            incremter_i=1;
+            if(comptage!=NBCASES && incremter_i==1/*&& chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m'*/)                      //if i is different from the number of cases and the character is different from 'B', 'b', 'M' and 'm'
             {
                 fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);   //we write the number and the color of the case set to 0 with ','
                 comptage++;
             }
-            else //if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                              //else
+            else if(incremter_i==1)//if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                              //else
             {
                 fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);    //we write the number and the color of the case set to 0 without ','
                 comptage++;
             }
             stock--;                                                //we decrement stock
             printf0("--\n");
+            
         }
         else if (chaineF[j]>='0' && chaineF[j]<='9')                //if the character is a number
         {
+            incremter_i=1;
             if(chaineF[j+1]>='0' && chaineF[j+1]<='9')              //and if the next character is a number
             {
                 stock = (chaineF[j+1]-'0')+10*(chaineF[j]-'0');     //we stock the number in stock
@@ -224,7 +223,7 @@ int main(int argc, char* argv[])
         
         else                                                      //if the character is not a number
         {
-
+                incremter_i=1;
                 switch(chaineF[j])                                      //we enter in a switch case
                 {
                 case 'u':
@@ -487,21 +486,24 @@ int main(int argc, char* argv[])
                             break;
                     }
                     break;
+                    default:
+                        incremter_i=0;
+                        break;
             
         }
         
-        if(i!=NBCASES && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
+        if(incremter_i==1 && comptage!=NBCASES && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
         {                     
             fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);           //we write the number and the color of the case with ','
             comptage++;
         } 
-        else if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
+        else if ( incremter_i==1 && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
         {   
             fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);            //we write the number and the color of the case without ','
             comptage++;
         }
     }
-
+    //if(chaineF[j]>='A' && chaineF[j]<='z' || chaineF[j]>='0' && chaineF[j]<='9')
     i++;                                                            //we increment i
     if(stock==0)                                                    //if stock is equal to 0
         j++;                                                        //we increment j
@@ -526,3 +528,4 @@ int main(int argc, char* argv[])
 
 }
 //'tBbdtBMUDmU42 r'
+//'UuUuUuuUubUuUUuUuUuUuUuUBuuUuUuUuUuUumUUuUuUuuUMuUuU j'

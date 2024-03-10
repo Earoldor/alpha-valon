@@ -4,7 +4,7 @@ traiterJson({
 "scoreJ5":0,
 "scoreR":24,
 "scoreR5":0,
-"bonusJ":255,
+"bonusJ":1,
 "malusJ":255,
 "bonusR":255,
 "malusR":255,
