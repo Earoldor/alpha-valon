@@ -176,7 +176,7 @@ ou  -> make
         -> Avec des nombres à deux chiffres : tdt10UDU32 r
         -> Avec trop de cases : tdtUDU48 r
 
-
+        -> Par contre, le programme ne saura pas gérer une chaine FEN du type : tbUééùmdBUU43 r, où un bonus se trouve après des caractères spéciaux.
 
 
 //////////////////////////::::FIN NOTICE D'UTILISATION DU STANDALONE::::////////////////////////////
