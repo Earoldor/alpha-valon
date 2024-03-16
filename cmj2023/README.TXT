@@ -159,14 +159,7 @@ ou  -> make
 
 => Lorsque vous entrez une chaine FEN en paramètre, merci de faire attention à respecter son écriture et à ce qu'elle soit correcte.
 
-=> Dans le cas où elle n'est pas correcte, le programme saura gérer les chaines FEN de la forme suivante :
-
-        -> Avec trop de bonus/malus, par exemple : tBbdtBMUDmU42 r
-        -> Avec des symboles spéciaux du type : tbUmééùdBUU43 r
-        -> Avec des nombres à deux chiffres : tdt10UDU32 r
-        -> Avec trop de cases : tdtUDU48 r
-
-        -> Par contre, le programme ne saura pas gérer une chaine FEN du type : tbUééùmdBUU43 r, où un bonus se trouve après des caractères spéciaux.
+=> Si vous ne respectez pas son écriture, le programme saura reconnaitre les erreurs et dans certains cas vous forcera à la corriger.
 
 
 //////////////////////////::::FIN NOTICE D'UTILISATION DU STANDALONE::::////////////////////////////
