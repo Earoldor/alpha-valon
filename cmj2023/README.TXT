@@ -1,3 +1,6 @@
+CECI FONCTIONNE UNIQUEMENT POUR LINUX.
+VOUS POUVEZ TENTER DE L'EXECUTER SUR MAC, MAIS SUCCES NON GARANRTI
+
 //////////////////////////::::NOTICE D'UTILISATION DU STANDALONE::::////////////////////////////
 
 
@@ -63,19 +66,6 @@ ou  -> make
 
 => Il vous sera ensuite demandé de jouer un coup. Pour cela, vous devez renseigner une position de départ et une position d'arrivée.
     -> Attention !!! : Un coup impossible sera détectée.
-
-
-
-
-!--!--!--!--! COMPLÉMENTARITÉ EXPÉRIMENTALE !--!--!--!--!
-
-=> Dans le code du standalone.c, vous aurez l'occasion de retrouver en commentaire des lignes du type "//fonctionFen(position);"
-   Ces lignes sont à disposition de l'utilisateur s'il veut récupérer la position courrante du programme en notation FEN.
-   
-   CEPENDANT : Cette fonctionnalité est à l'état expérimentale. C'est-à-dire que cette fonctionnalité n'est pas garantie de fonctionner parfaitement dans tous les cas.
-               Elle constitue une première complémentarité entre le standalone.c et le diag.c.
- 
-   Nous ne recommandons donc pas son utilisation autre d'un cas de récupération d'une position SIMPLE.
 
 
 

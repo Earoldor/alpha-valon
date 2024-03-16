@@ -7,7 +7,8 @@
 /* DESVIGNE Arthur                                         */
 /* DEBROUCKER Baptiste                                     */
 /*Date of original creation : 19/02/24                     */
-/*Version : 1.0 - Without Debugging Mode                   */
+/*The date of the last modification : 16/03/24             */
+/*Version : 2.0                                            */
 /***********************************************************/
 
 // Path: alpha-valon/cmj2023/standalone/standalone.c
@@ -19,17 +20,21 @@
 #include <stdio.h>                  //standard input output
 #include <stdlib.h>                 //standard too
 #include <string.h>                 //for char manipulation
+#include <libgen.h>                 //for the dirname function
+#include <unistd.h>                 //for the access function
 #include "../include/avalam.h"      //for games functions
 #include "../include/topologie.h"   //for the topologie of the game
 
-#define MAXPATH 100
+#define MAXPATH 200
+#define MAXCASES 48
 
 /***********************************************************/
 /*Prototype Declaration                                    */
 /***********************************************************/
 
 void writeJS(T_Position position, T_Score score, char chaine_JS[]); //prototype of the function that will write the JSON file
-void fonctionFen(T_Position pos);                              //prototype of the function that will write the FEN format
+int chemin_valide(const char *chemin);
+//void fonctionFen(T_Position pos);                              //prototype of the function that will write the FEN format
 
 /***********************************************************/
 /*Principal function : main                               */
@@ -48,8 +53,9 @@ int main(int argc, char *argv[])
     T_ListeCoups legaux;    //legal moves declaration
     octet stockage;         //octet declaration for the storage of the validity of a move
     int result;             //int declaration for the storage of the result of the scanf
-    char nomfic[200];
+    char nomfic[MAXPATH];
     char defaultPath[MAXPATH]="./web/data/refresh-data.js";
+    octet pastPositionBMR=255,pastPositionBMJ=255;
     /*******************************************************/
     /*Initialization and starting of the game              */
     /*******************************************************/
@@ -57,7 +63,10 @@ int main(int argc, char *argv[])
     if(argc != 2)
         strcpy(nomfic, defaultPath);
     else
-        strcpy(nomfic, argv[1]);
+    {
+        if(chemin_valide(argv[1])==0)
+            strcpy(nomfic, argv[1]);
+    }
 
     printf("\t!--!--!--!--!--!--!--!--! JOUONS À AVALAM !--!--!--!--!--!--!--!--!\n");
 
@@ -98,57 +107,56 @@ int main(int argc, char *argv[])
     printf("\n\tAu tour du joueur 1 / Jaune de donner la position de son bonus :"); //asking for the position of the bonus of the player 1 / Jaune
     scanf("%hhd", &(position.evolution.bonusJ));            //entering the position of the bonus of the player 1 / Jaune
 
-    while(position.cols[position.evolution.bonusJ].couleur==ROU)        //if the position of the bonus is occupied by a red piece                                                            
+    while(position.cols[position.evolution.bonusJ].couleur!=JAU || position.evolution.bonusJ==pastPositionBMJ)        //if the position of the bonus is occupied by a red piece                                                            
     {
-        fprintf(stderr, "Impossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur\n");
-        printf("\n\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre case:");
+        fprintf(stderr, "Impossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur :\n");
         scanf("%hhd", &position.evolution.bonusJ);                      //asking for the position of the bonus of the player 1 / Jaune
 
         printf0("_DEBUG_ BONUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
     }
+    pastPositionBMJ=position.evolution.bonusJ;
     writeJS(position, score, nomfic);                    //writting finals results of placing bonus and malus
    
    
     printf("\n\tAu tour du joueur 2 / Rouge de donner la position de son bonus :");
     scanf("%hhd", &position.evolution.bonusR);            //entering the position of the bonus of the player 2 / Rouge
 
-    while(position.cols[position.evolution.bonusR].couleur!=ROU)        //if the position of the bonus is occupied by a yellow piece
+    while(position.cols[position.evolution.bonusR].couleur!=ROU || position.evolution.bonusR==pastPositionBMR)        //if the position of the bonus is occupied by a yellow piece
     {
-        fprintf(stderr, "Impossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur\n");
-        printf("\tImpossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
+        fprintf(stderr, "Impossible de placer le bonus sur une case occupée par un malus ou d'une autre couleur :\n");
         scanf("%hhd", &position.evolution.bonusR);                      //asking for the position of the bonus of the player 2 / Rouge
 
         printf0("_DEBUG_ BONUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
+    pastPositionBMR=position.evolution.bonusR;
     writeJS(position, score, nomfic);               //writting finals results of placing bonus and malus
 
    
     printf("\n\tAu tour du joueur 1 / Jaune de donner la position de son malus :");
     scanf("%hhd", &position.evolution.malusJ);            //entering the position of the malus of the player 1 / Jaune
 
-    while(position.cols[position.evolution.malusJ].couleur!=JAU || position.evolution.malusJ==position.evolution.bonusJ)       //if the position of the malus is occupied by a yellow piece
+    while(position.cols[position.evolution.malusJ].couleur!=JAU || position.evolution.malusJ==pastPositionBMJ)       //if the position of the malus is occupied by a yellow piece
     {
-        fprintf(stderr, "Impossible de placer le malus sur une case occupée par un malus ou d'une autre couleur\n");
-        printf("\tImpossible de placer le malus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
+        fprintf(stderr, "Impossible de placer le malus sur une case occupée par un malus ou d'une autre couleur :\n");
         scanf("%hhd", &position.evolution.malusJ);      //asking for the position of the malus of the player 1 / Jaune
 
         printf0("_DEBUG_ MALUS JAUNE EN COURS DE RENSEIGNEMENTS\n");
     }
+    pastPositionBMJ=position.evolution.malusJ;
     writeJS(position, score, nomfic);        //writting finals results of placing bonus and malus
 
 
     printf("\n\tAu tour du joueur 2 / Rouge de donner la position de son malus :");
     scanf("%hhd", &position.evolution.malusR);            //entering the position of the malus of the player 2 / Rouge
 
-    while(position.cols[position.evolution.malusR].couleur!=ROU || position.evolution.malusR==position.evolution.bonusR)      //if the position of the malus is occupied by a red piece
+    while(position.cols[position.evolution.malusR].couleur!=ROU || position.evolution.malusR==pastPositionBMR)      //if the position of the malus is occupied by a red piece
     {
-        fprintf(stderr, "Impossible de placer le malus sur une case occupée par un malus ou d'une autre couleur\n");
-        printf("\tImpossible de placer le malus sur une case occupée par un malus ou d'une autre couleur, veuillez choisir une autre :");
+        fprintf(stderr, "Impossible de placer le malus sur une case occupée par un malus ou d'une autre couleur :\n ");
         scanf("%hhd", &position.evolution.malusR);     //asking for the position of the malus of the player 2 / Rouge
 
         printf0("_DEBUG_ MALUS ROUGE EN COURS DE RENSEIGNEMENTS\n");
     }
-
+    pastPositionBMR=position.evolution.malusR;
     writeJS(position, score,nomfic);    //writting finals results of placing bonus and malus
 
     printf0("_DEBUG_ POSITION EN ECRITURE\n");
@@ -161,7 +169,7 @@ int main(int argc, char *argv[])
     /*First function while which will serve for looping    */
     /*******************************************************/
 
-    while(legaux.nb != 0 || coup.origine>48 || coup.destination>48 || coup.origine<0 || coup.destination<0)
+    while(legaux.nb != 0 || coup.origine>MAXCASES || coup.destination>MAXCASES || coup.origine<0 || coup.destination<0)
     {
         printf("\n\tC'est au tour du joueur ");    //showing the player who has to play
         if (position.trait==1)
@@ -331,7 +339,22 @@ void writeJS(T_Position position, T_Score score, char chaine_JS[])
     fclose(fic);
 }
 
-void fonctionFen(T_Position pos)
+int chemin_valide(const char *chemin) 
+{
+    char *copieChemin = strdup(chemin);                                               // Copie le chemin d'accès
+    char *cheminDir=dirname(copieChemin);                                               // Vérifie si le chemin d'accès existe
+
+    if (access(cheminDir, F_OK) != 0) 
+    {   
+        printf("!--!--!--! LE CHEMIN N'EXISTE PAS !--!--!--!--!\n");                                                // Le chemin d'accès existe
+        exit(1);
+    } else {
+                                                        // Le chemin d'accès n'existe pas
+        return 0;
+    }
+}
+
+/*void fonctionFen(T_Position pos)
 {
     char chaine[100];
     int i,j=0,stock=0;
@@ -452,3 +475,4 @@ void fonctionFen(T_Position pos)
 
     printf("%s\n",chaine);
 }
+*/

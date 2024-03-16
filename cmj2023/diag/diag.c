@@ -7,7 +7,8 @@
 /* DESVIGNE Arthur                                         */
 /* DEBROUCKER Baptiste                                     */
 /*Date of original creation : 19/02/24                     */
-/*Version : 1.0 - Without Debugging Mode                   */
+/*The date of the last modification : 16/03/24             */
+/*Version : 2.0 -                                          */
 /***********************************************************/
 
 // Path: alpha-valon/cmj2023/diag/diag.c
@@ -19,6 +20,9 @@
 #include <stdio.h>                  //standard input output
 #include <stdlib.h>                 //standard également
 #include <string.h>                 //for the string manipulation
+#include <ctype.h>                  //for the character manipulation
+#include <unistd.h>                 //for the file manipulation
+#include <libgen.h>                 //for the file manipulation
 #include "../include/avalam.h"      //for game functions
 #include "../include/topologie.h"   //for the topologie
 #define MAXNOM 100
@@ -26,12 +30,15 @@
 #define MAXLIGNE 10
 #define MAXCONTENT 10000
 #define COMPENSATION 20
+#define MAXPATH 200
+
 
 /***********************************************************/
 /*Prototype Declaration                                    */
 /***********************************************************/
 
-void vider_stdin();
+void verificationFen(char *chaineFEN);
+int chemin_valide(const char *chemin);
 
 /***********************************************************/
 /*Principal function : main                               */
@@ -45,12 +52,11 @@ int main(int argc, char* argv[])
 
     char *chaineF=argv[2],description[MAXCHAR];                         //chaineF is the FEN string, description is the description of the file
     //char lignes[MAXLIGNE][MAXCHAR];                                     //lignes is a table of characters
-    char desc[MAXCHAR],chemin[MAXNOM]="./web/data/diag_ressources.js",cheminModif[MAXNOM],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
-    int j,longueur,stockage=0,content=0; //num_lignes=0;                                  //these are some variables for the programm
+    char desc[MAXCHAR],chemin[MAXPATH]="./web/data/diag_ressources.js",cheminModif[MAXPATH],temp[100];       //desc is the description of the file (entered by user in execution of that programm), chemin is the path of the file
+    int j,longueur,stockage=0;                                      //these are some variables for the programm
     octet i,stock=0;                                                //i is a variable for the loop, stock is a variable which surves to stock the number of empty cases
     T_Position position;                                            //position is the position of the game
     FILE *fic ;                                                     //fic is a file pointer
-    int len,ch;
     int drap=0,posGen=0,maxBonusMalus=1;
     int bonusJDrap=0,bonusRDrap=0,malusJDrap=0,malusRDrap=0;
     int stockJB=255,stockRB=255,stockJM=255,stockRM=255;
@@ -71,6 +77,8 @@ int main(int argc, char* argv[])
     }       
 
     printf0("_DEBUG_ CHECKING DU NOMBRE D'ARGUMENTS\n");
+
+    verificationFen(chaineF);                                       //we verify the FEN string
 
     /*******************************************************/
     /*Checking the turn                                    */
@@ -101,13 +109,17 @@ int main(int argc, char* argv[])
     printf("!--!--!--!--!--! VOULEZ-VOUS CHANGER LE NOM DU FICHIER ??? !--!--!--!--!--!\n");
 
   
-    fgets(cheminModif,MAXNOM,stdin);                                      //we ask to the user if he wants to change the path of the file
+    fgets(cheminModif,MAXPATH,stdin);                                      //we ask to the user if he wants to change the path of the file
+    chemin_valide(cheminModif);
 
     if(strcmp(cheminModif,"\n")!=0)
     {
         strtok(cheminModif,"\n");
         strcpy(chemin,cheminModif);
     }
+
+
+
     printf("\n!--!--!--!--!--! CHEMIN DU FICHIER : %s !--!--!--!--!--!\n",chemin);
 
     printf0("_DEBUG_ RECUPERATION DU CHEMIN D'ACCES DU FICHIER\n");
@@ -126,10 +138,11 @@ int main(int argc, char* argv[])
     while(fgets(temp,sizeof(temp),stdin))
     {
         strtok(temp,"\n");
+        strcat(temp,"<br/>");
         strcat(desc,temp);
     }
  
-    desc[strlen(desc)-1]='\0';
+    //desc[strlen(desc)-1]='\0';
 
     if(strcmp(desc,"\n")==0 || strcmp(desc,"")==0)                                          //if the description is empty
     {
@@ -149,7 +162,7 @@ int main(int argc, char* argv[])
     printf("!--! CHAINE FEN : %s !--!\n",chaineF);                  //we display the FEN string
     
     if(strcmp(desc,"")==0)                                          //if the description is empty
-        printf("!--! DESCRIPTIUuUuUuuUubUuUUuUuUuUuUuUBuuUuUuUuUuUumUUuUuUuuUMuUuU jON : %s !--!\n",description);         //we display the description enters via a redirection
+        printf("!--! DESCRIPTION : %s !--!\n",description);         //we display the description enters via a redirection
     else                                                            //else
         printf("!--! DESCRIPTION : %s !--!\n",desc);                //we display the description enters via the keyboard
     
@@ -527,5 +540,55 @@ int main(int argc, char* argv[])
     return 0;
 
 }
-//'tBbdtBMUDmU42 r'
-//'UuUuUuuUubUuUUuUuUuUuUuUBuuUuUuUuUuUumUUuUuUuuUMuUuU j'
+
+void verificationFen(char *chaineFEN)
+{
+    int i,j=0;
+    
+    if(j>1)
+    {
+        perror("!--!--!--!--!--! ERREUR CRITIQUE : TROP D'ESPACES DANS LA CHAINE FEN !--!--!--!--!--!\n");
+        exit(1);
+    }
+
+    if(chaineFEN[0] == 'b' || chaineFEN[0] == 'B' || chaineFEN[0] == 'm' || chaineFEN[0] == 'M')
+    {
+        perror("!--!--!--!--!--! ERREUR CRITIQUE : LA CHAINE FEN NE PEUT PAS COMMENCER PAR UN B, b, M OU m !--!--!--!--!--!\n");
+        exit(1);
+    }
+
+    for(i=0;i<strlen(chaineFEN);i++)
+    {
+        if(!isalpha(chaineFEN[i]) && !isdigit(chaineFEN[i]) && chaineFEN[i]!= ' ')
+        {
+            perror("!--!--!--!--!--! CARACTERE NON AUTORISÉ DANS LA CHAINE FEN !--!--!--!--!--!\n");
+            exit(1);
+        }
+
+        if(chaineFEN[i]==' ')
+        {
+            j++;
+        }
+        if(j>1)
+        {
+            perror("!--!--!--!--!--! ERREUR CRITIQUE : TROP D'ESPACES DANS LA CHAINE FEN !--!--!--!--!--!\n");
+            exit(1);
+        }
+
+    }
+}
+
+int chemin_valide(const char *chemin) 
+{
+    char *copieChemin = strdup(chemin);                                               // Copie le chemin d'accès
+    char *cheminDir=dirname(copieChemin);                                               // Vérifie si le chemin d'accès existe
+
+    if (access(cheminDir, F_OK) != 0) 
+    {   
+        printf("!--!--!--! LE CHEMIN N'EXISTE PAS !--!--!--!--!\n");                                                // Le chemin d'accès existe
+        exit(1);
+    } else {
+                                                        // Le chemin d'accès n'existe pas
+        return 0;
+    }
+}
