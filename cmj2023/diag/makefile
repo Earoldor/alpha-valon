@@ -15,10 +15,10 @@ LIB=-L../build/lib
 INC=-I../include
 
 diag.exe:diag.c 
-	gcc $(DEBUG) $(LIB) $(INC) diag.c -o diag.exe -lavalam
+	gcc $(DEBUG) $(LIB) $(INC) -g diag.c -o diag.exe -lavalam
 
 diag.static:diag.c 
-	gcc -static $(DEBUG) $(INC) $(LIB)  diag.c -o diag.static  -lavalam
+	gcc -static $(DEBUG) $(INC) $(LIB) -g diag.c -o diag.static  -lavalam
 
 clean: 
 	rm -rf diag.exe diag.static

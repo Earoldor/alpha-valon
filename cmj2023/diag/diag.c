@@ -39,6 +39,7 @@
 
 void verificationFen(char *chaineFEN);
 int chemin_valide(const char *chemin);
+char* verificationDescription(char *d);
 
 /***********************************************************/
 /*Principal function : main                               */
@@ -61,7 +62,7 @@ int main(int argc, char* argv[])
     int bonusJDrap=0,bonusRDrap=0,malusJDrap=0,malusRDrap=0;
     int stockJB=255,stockRB=255,stockJM=255,stockRM=255;
     int stockB=0,stockM=0,stockb=0,stockm=0;
-    int posDecal=0;
+    int posDecal=0,defaultPos=0;
     int comptage=0;
     char transform[3];
     int incremter_i=1;
@@ -142,6 +143,7 @@ int main(int argc, char* argv[])
         strcat(desc,temp);
     }
  
+    verificationDescription(desc);
     //desc[strlen(desc)-1]='\0';
 
     if(strcmp(desc,"\n")==0 || strcmp(desc,"")==0)                                          //if the description is empty
@@ -194,24 +196,26 @@ int main(int argc, char* argv[])
 
     while(comptage!=NBCASES)                                              //while i is less than the number of cases
     {
-        if(stock>0)                                                 //if stock is positive
+        if(stock>0 && incremter_i!=0 || chaineF[j]==' ')                                                 //if stock is positive
         {   
             incremter_i=1;
             if(comptage!=NBCASES && incremter_i==1/*&& chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m'*/)                      //if i is different from the number of cases and the character is different from 'B', 'b', 'M' and 'm'
             {
                 fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);   //we write the number and the color of the case set to 0 with ','
                 comptage++;
+                printf0("\n--\n");
             }
             else if(incremter_i==1)//if (chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')                              //else
             {
                 fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb=0,STR_COULEUR, position.cols[i].couleur=0);    //we write the number and the color of the case set to 0 without ','
                 comptage++;
+                printf0("\n-FIN-\n");
             }
             stock--;                                                //we decrement stock
-            printf0("--\n");
+            //printf0("--\n");
             
         }
-        else if (chaineF[j]>='0' && chaineF[j]<='9')                //if the character is a number
+        else if (chaineF[j]>='0' && chaineF[j]<='9' && incremter_i!=0)                //if the character is a number
         {
             incremter_i=1;
             if(chaineF[j+1]>='0' && chaineF[j+1]<='9')              //and if the next character is a number
@@ -231,15 +235,15 @@ int main(int argc, char* argv[])
 
             stockage=stockage+stock;                                         //we stock the value of stock in stockage
             posDecal=posDecal+atoi(transform);                               //we stock the value of transform in posDecal
-            printf1("%d posdecale\n",posDecal);
+            printf1("%d posdecalé\n",posDecal);
         }
         
         else                                                      //if the character is not a number
         {
-                incremter_i=1;
                 switch(chaineF[j])                                      //we enter in a switch case
                 {
                 case 'u':
+                    incremter_i=1;
                     position.cols[i].nb = 1;
                     position.cols[i].couleur = JAU;
 
@@ -252,9 +256,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nu\n");
                     break;
                 case 'U':
+                    incremter_i=1;
                     position.cols[i].nb = 1;
                     position.cols[i].couleur = ROU;
 
@@ -267,9 +272,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nU\n");
                     break;
                 case 'd':
+                    incremter_i=1;
                     position.cols[i].nb = 2;
                     position.cols[i].couleur = JAU;
 
@@ -282,9 +288,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nd\n");
                     break;
                 case 'D':
+                    incremter_i=1;
                     position.cols[i].nb = 2;
                     position.cols[i].couleur = ROU;
 
@@ -297,9 +304,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nD\n");
                     break;
                 case 't':
+                    incremter_i=1;
                     position.cols[i].nb = 3;
                     position.cols[i].couleur = JAU;
 
@@ -312,9 +320,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nt\n");
                     break;
                 case 'T':
+                    incremter_i=1;
                     position.cols[i].nb = 3;
                     position.cols[i].couleur = ROU;
 
@@ -327,9 +336,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nT\n");
                     break;
                 case 'q':
+                    incremter_i=1;
                     position.cols[i].nb = 4;
                     position.cols[i].couleur = JAU;
 
@@ -342,9 +352,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nq\n");
                     break;
                 case 'Q':
+                    incremter_i=1;
                     position.cols[i].nb = 4;
                     position.cols[i].couleur = ROU;
 
@@ -357,9 +368,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nQ\n");
                     break;
                 case 'c':
+                    incremter_i=1;
                     position.cols[i].nb = 5;
                     position.cols[i].couleur = JAU;
 
@@ -372,9 +384,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nc\n");
                     break;
                 case 'C':
+                    incremter_i=1;
                     position.cols[i].nb = 5;
                     position.cols[i].couleur = ROU;
 
@@ -387,9 +400,10 @@ int main(int argc, char* argv[])
                         posGen++;
                     else
                         drap=1;
-
+                    printf0("\nC\n");
                     break;
                 case 'B':
+                    incremter_i=1;
                     stockB++;
                     printf1("%d DINST\n",stockB);
                     printf1("%d DECALAGE\n",stockage);
@@ -400,17 +414,31 @@ int main(int argc, char* argv[])
                         {
                             if(stockage!=0)
                             {
-                                position.evolution.bonusR = posGen + posDecal;              //we stock the value of i-stockage in the bonusR
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                position.evolution.bonusR = posGen + posDecal + defaultPos;              //we stock the value of i-stockage in the bonusR
                                 stockRB = position.evolution.bonusR-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.bonusR);    //writing of the bonus of the red player
                                 printf1("%d",stockRB);
+                                printf0("\nBONUS DÉCALÉ CAR STOCKAGE NON NUL\n");
                             }
                             else
                             {
-                                position.evolution.bonusR = posGen;              //we stock the value of i-stockage in the bonusR
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                position.evolution.bonusR = posGen + defaultPos;              //we stock the value of i-stockage in the bonusR
                                 stockRB = position.evolution.bonusR-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.bonusR);    //writing of the bonus of the red player
                                 printf1("%d",stockRB);
+                                printf0("\nBONUS PAS DÉCALÉ\n");
                             }
                         }
                         else
@@ -418,6 +446,7 @@ int main(int argc, char* argv[])
                     }   
                     break;
                 case 'b':
+                    incremter_i=1;
                     stockb++;
                     printf1("%d DECALAGE\n",stockage);
                     printf1("%d POSDECALE\n",posDecal);
@@ -427,17 +456,32 @@ int main(int argc, char* argv[])
                         {
                             if(stockage!=0)
                             {
-                                position.evolution.bonusJ = posGen + posDecal;              //we stock the value of i-stockage in the bonusR
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                printf1("%d defaultPos\n",defaultPos);
+                                position.evolution.bonusJ = posGen + posDecal + defaultPos;              //we stock the value of i-stockage in the bonusR
                                 stockJB = position.evolution.bonusJ-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.bonusJ);    //writing of the bonus of the red player
                                 printf1("%d",stockJB);
+                                printf0("\nBONUS DÉCALÉ CAR STOCKAGE NON NUL\n");
                             }
                             else
                             {
-                                position.evolution.bonusJ = posGen;              //we stock the value of i-stockage in the bonusR
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                position.evolution.bonusJ = posGen + defaultPos;              //we stock the value of i-stockage in the bonusR
                                 stockJB = position.evolution.bonusJ-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.bonusJ);    //writing of the bonus of the red player
                                 printf1("%d",stockJB);
+                                printf0("\nBONUS PAS DÉCALÉ\n");
                             }
                         }
                         else
@@ -445,6 +489,7 @@ int main(int argc, char* argv[])
                     }             
                     break;
                 case 'M':
+                    incremter_i=1;
                     stockM++;
                     printf1("%d DECALAGE\n",stockage);
                     printf1("%d POSDECALE\n",posDecal);
@@ -454,17 +499,31 @@ int main(int argc, char* argv[])
                         {
                             if(stockage != 0)
                             {
-                                position.evolution.malusR = posGen + posDecal;              //we stock the value of i-stockage in the malusR
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                position.evolution.malusR = posGen + posDecal + defaultPos;              //we stock the value of i-stockage in the malusR
                                 stockRM = position.evolution.malusR-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.malusR);    //writing of the bonus of the red player
                                 printf1("%d",stockRM);
+                                printf0("\nMALUS DÉCALÉ CAR STOCKAGE NON NUL\n");
                             }
                             else
                             {
-                                position.evolution.malusR = posGen;              //we stock the value of i-stockage in the malusR
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                position.evolution.malusR = posGen + defaultPos;              //we stock the value of i-stockage in the malusR
                                 stockRM = position.evolution.malusR-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.malusR);    //writing of the bonus of the red player
                                 printf1("%d",stockRM);
+                                printf0("\nMALUS PAS DÉCALÉ\n");
                             }
                         }
                         else
@@ -472,7 +531,7 @@ int main(int argc, char* argv[])
                     }
                     break;  
                 case 'm':
-
+                    incremter_i=1;
                     stockm++;
                     printf1("%d DECALAGE\n",stockage);
                     printf1("%d POSDECALE\n",posDecal);
@@ -482,17 +541,31 @@ int main(int argc, char* argv[])
                         {
                             if(stockage != 0)
                             {
-                                position.evolution.malusJ = posGen + posDecal;              //we stock the value of i-stockage in the malusJ
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                position.evolution.malusJ = posGen + posDecal + defaultPos;              //we stock the value of i-stockage in the malusJ
                                 stockJM = position.evolution.malusJ-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.malusJ);    //writing of the bonus of the red player
                                 printf1("%d",stockJM);
+                                printf0("\nMALUS DÉCALÉ CAR STOCKAGE NON NUL\n");
                             }
                             else
                             {
-                                position.evolution.malusJ = posGen;              //we stock the value of i-stockage in the malusJ
+                                printf1("%d defaultPos\n",defaultPos);
+                                if(defaultPos>=2)
+                                {
+                                    defaultPos=defaultPos-(defaultPos-1);
+                                }
+                                position.evolution.malusJ = posGen + defaultPos;              //we stock the value of i-stockage in the malusJ
                                 stockJM = position.evolution.malusJ-1;
+                                defaultPos=0;
                                 printf1("%d :",position.evolution.malusJ);    //writing of the bonus of the red player
                                 printf1("%d",stockJM);
+                                printf0("\nMALUS PAS DÉCALÉ\n");
                             }
                         }
                         else
@@ -501,6 +574,9 @@ int main(int argc, char* argv[])
                     break;
                     default:
                         incremter_i=0;
+                        defaultPos++;
+                        stock=0;
+                        printf0("\nDEFAULT\n");
                         break;
             
         }
@@ -509,16 +585,18 @@ int main(int argc, char* argv[])
         {                     
             fprintf(fic,"\t{%s:%d, %s:%d},\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);           //we write the number and the color of the case with ','
             comptage++;
+            printf0("\n::plein::\n");
         } 
         else if ( incremter_i==1 && chaineF[j]!='B' && chaineF[j]!='b' && chaineF[j]!='M' && chaineF[j]!='m')
         {   
             fprintf(fic,"\t{%s:%d, %s:%d}\n",STR_NB, position.cols[i].nb,STR_COULEUR, position.cols[i].couleur);            //we write the number and the color of the case without ','
             comptage++;
+            printf0("\n::plein_fin::\n");
         }
     }
     //if(chaineF[j]>='A' && chaineF[j]<='z' || chaineF[j]>='0' && chaineF[j]<='9')
     i++;                                                            //we increment i
-    if(stock==0)                                                    //if stock is equal to 0
+    if(stock==0 && chaineF[j]!=' ')                                                    //if stock is equal to 0
         j++;                                                        //we increment j
 
 
@@ -591,4 +669,18 @@ int chemin_valide(const char *chemin)
                                                         // Le chemin d'accès n'existe pas
         return 0;
     }
+}
+
+char* verificationDescription(char *d)
+{
+    int i;
+    for(i=0;i<strlen(d);i++)
+    {
+        if(d[i]=='"' || d[i]=='\'' || d[i]=='/')
+        {
+            d[i]=' ';
+        }
+    }
+
+    return d;
 }
